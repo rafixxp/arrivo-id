@@ -1,0 +1,235 @@
+<script setup>
+import Topbar from '../../components/Topbar.vue';
+</script>
+
+<template>
+    <Topbar title="Detail Karyawan"/>
+    <div class="container mb-2 pb-5 px-3">
+        <!-- Profile Section -->
+        <div class="bg-white border-white border-0 p-3 rounded text-center mb-2">
+            <img src="https://ui-avatars.com/api/?name=Rafi+Ahfa+Fauzan&background=0d6efd&color=fff&size=100&bold=true" alt="" class="img-fluid object-fit-cover rounded-circle mb-3" width="100px" height="100px">
+            <h5 class="fw-bold mb-1">Rafi Ahfa Fauzan</h5>
+            <span class="fs-21 text-muted d-block mb-2">Software Developer</span>
+            <div class="d-flex justify-content-center gap-2 mb-2">
+                <span class="badge bg-success">Aktif</span>
+                <span class="badge bg-primary">Web Developer</span>
+            </div>
+        </div>
+
+        <!-- Action Button -->
+        <div class="row mb-2">
+            <div class="col me-1">
+                <button class="btn btn-dark btn-sm w-100"><span class="bi bi-pencil me-2"></span>Edit</button>
+            </div>
+            <div class="col ms-1">
+                <button class="btn btn-danger btn-sm w-100"><span class="bi bi-trash me-2"></span>Delete</button>
+            </div>
+        </div>
+
+        <!-- Detail Section -->
+        <div class="bg-white p-3 border-0 rounded">
+            <div class="row mt-2">
+                <div class="col-2 d-flex align-items-center">
+                    <h4 class="mt-2 bi bi-whatsapp"></h4>
+                </div>
+                <div class="col-10">
+                    <span class="fs-21 text-muted">Nomor HP / Whatsapp</span>
+                    <h6 class="fw-bold">08123456789</h6>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-2 d-flex align-items-center">
+                    <h4 class="mt-2 bi bi-envelope"></h4>
+                </div>
+                <div class="col-10">
+                    <span class="fs-21 text-muted">Email</span>
+                    <h6 class="fw-bold">rafiahfa@arrivo.id</h6>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-2 d-flex align-items-center">
+                    <h4 class="mt-2 bi bi-cake"></h4>
+                </div>
+                <div class="col-10">
+                    <span class="fs-21 text-muted">Tanggal Lahir</span>
+                    <h6 class="fw-bold">09 Juli 2006</h6>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-2 d-flex align-items-center">
+                    <h4 class="mt-2 bi bi-geo-alt"></h4>
+                </div>
+                <div class="col-10">
+                    <span class="fs-21 text-muted">Tempat Lahir</span>
+                    <h6 class="fw-bold">Ciamis</h6>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-2 d-flex align-items-center">
+                    <h4 class="mt-2 bi bi-map"></h4>
+                </div>
+                <div class="col-10">
+                    <span class="fs-21 text-muted">Alamat</span>
+                    <h6 class="fw-bold">Jl. Raya Banjar, Kec. Cineam, Kab. Tasikmalaya, Prov. Jawa Barat</h6>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-2 d-flex align-items-center">
+                    <h4 class="mt-2 bi bi-person-gear"></h4>
+                </div>
+                <div class="col-10">
+                    <span class="fs-21 text-muted">Jabatan</span>
+                    <h6 class="fw-bold">Software Developer</h6>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-2 d-flex align-items-center">
+                    <h4 class="mt-2 bi bi-calendar-day"></h4>
+                </div>
+                <div class="col-10">
+                    <span class="fs-21 text-muted">Diterima</span>
+                    <h6 class="fw-bold">09 Juli 2022</h6>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-2 d-flex align-items-center">
+                    <h4 class="mt-2 bi bi-calendar-x"></h4>
+                </div>
+                <div class="col-10">
+                    <span class="fs-21 text-muted">Habis Kontrak</span>
+                    <h6 class="fw-bold">09 Juli 2023</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<style scoped>
+.fs-21{
+    font-size: 11px;
+}
+.fs-14{
+    font-size: 13px;
+}
+.border-none{
+    border: none;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 767px) {
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .bg-white.p-3 {
+        padding: 1rem !important;
+        margin-bottom: 1rem;
+    }
+    
+    .fs-21 {
+        font-size: 11px !important;
+    }
+    
+    h5 {
+        font-size: 16px !important;
+    }
+    
+    h6 {
+        font-size: 12px !important;
+    }
+    
+    .btn {
+        font-size: 12px !important;
+        padding: 0.75rem !important;
+    }
+    
+    .badge {
+        font-size: 9px !important;
+        padding: 0.25rem 0.5rem !important;
+    }
+    
+    /* Profile picture mobile */
+    .img-fluid.rounded-circle {
+        width: 80px !important;
+        height: 80px !important;
+    }
+}
+
+/* Desktop Responsive Styles */
+@media (min-width: 992px) {
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+    
+    .fs-21 {
+        font-size: 12px !important;
+    }
+    
+    h5 {
+        font-size: 20px !important;
+    }
+    
+    h6 {
+        font-size: 16px !important;
+    }
+    
+    .btn {
+        font-size: 14px !important;
+        padding: 1rem !important;
+    }
+    
+    .badge {
+        font-size: 11px !important;
+        padding: 0.35rem 0.65rem !important;
+    }
+    
+    /* Profile picture desktop */
+    .img-fluid.rounded-circle {
+        width: 120px !important;
+        height: 120px !important;
+    }
+}
+
+/* Large Desktop Styles */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 700px;
+    }
+    
+    .fs-21 {
+        font-size: 13px !important;
+    }
+}
+
+/* Common improvements */
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.badge {
+    border-radius: 0.375rem;
+}
+
+.row {
+    margin: 0;
+}
+
+.row .col,
+.row .col-4,
+.row .col-8 {
+    padding: 0.25rem 0;
+}
+
+
+/* Info cards styling */
+.bg-white.p-3:not(:first-child) {
+    border: 1px solid #e9ecef;
+}
+
+/* Action buttons styling */
+.d-flex.gap-2 {
+    margin-top: 1rem;
+}
+</style>
