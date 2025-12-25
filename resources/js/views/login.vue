@@ -19,7 +19,7 @@ const SignIn = async () => {
         if(response.status === 200){
             localStorage.setItem('user', JSON.stringify(response.data.user));
             localStorage.setItem('token', response.data.access_token);
-            router.push('/');
+            router.push(response.data.redirect);
         }
         else{
            Swal.fire({
@@ -41,8 +41,11 @@ const SignIn = async () => {
 
 <template>
     <div class="container mx-4 vh-50 bg-white p-3 rounded w-125">
-        <h5 class="fw-bold m-0">Sign In</h5>
-        <span class="text-muted fs-21">Silahkan Sign In dengan akun anda</span>
+        <div class="text-center">
+            <img src="../assets/icon.webp" alt="icon" width="75" height="75" class="rounded shadow-sm mb-3">
+            <h5 class="fw-bold m-0">Sign In</h5>
+            <span class="text-muted fs-21">Silahkan masuk dengan akun anda</span>
+        </div>
         <div class="form-group mt-3">
             <label for="email" class="fs-21">Email atau nomor telepon</label>
             <input type="text" name="email" class="form-control" id="email" v-model="credential.email">

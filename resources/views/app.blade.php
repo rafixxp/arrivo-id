@@ -11,6 +11,16 @@
         *{
             font-family: 'Inter', sans-serif !important;
         }
+        
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Hide scrollbar for IE, Edge and Firefox */
+        scrollbar-width: thin;
+        scrollbar-color: transparent transparent;
+
         .roboto-<uniquifier> {
         font-family: "Roboto", sans-serif;
         font-optical-sizing: auto;

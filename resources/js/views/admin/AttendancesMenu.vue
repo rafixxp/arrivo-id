@@ -13,7 +13,7 @@ const go = (component) => {
     <!-- Top Bar -->
     <Topbar title="Kehadiran"/>
     <div class="container">
-        <div class="bg-white col-12 p-3 rounded" @click="go('/settings/company')">
+        <div class="bg-white col-12 p-3 rounded" @click="go('/attendance/schedule')">
             <div class="row align-items-center">
                 <div class="col-2">
                     <h1 class="bi bi-calendar-day mt-1"></h1>
@@ -24,7 +24,7 @@ const go = (component) => {
                 </div>
             </div>
         </div>
-        <div class="bg-white col-12 p-3 rounded mt-2" @click="go('/settings/branches')">
+        <div class="bg-white col-12 p-3 rounded mt-2" @click="go('/attendance/daily')">
             <div class="row align-items-center">
                 <div class="col-2">
                     <h1 class="bi bi-person-check mt-1"></h1>

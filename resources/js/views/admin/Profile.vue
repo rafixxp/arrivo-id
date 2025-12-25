@@ -9,52 +9,40 @@ import Swal from 'sweetalert2'
 const route = useRoute()
 const router = useRouter()
 
-const data = ref()
+const data = ref(JSON.parse(localStorage.getItem('user')))
 
-const destroy = async (id) => {
+const logout = () => {
     Swal.fire({
         icon: 'question',
-        title: 'Hapus karyawan ini ?',
+        title: 'Logout',
+        text: 'Apakah Anda yakin ingin keluar?',
         showCancelButton: true,
-        cancelButtonText: 'Tidak',
-        confirmButtonText: 'Ya'
-    }).then(async(result) => {
-        if(result.isConfirmed){
-            const deletes = await axios.delete(`/api/employees/${id}`, {
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Batal'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            const destroy = await axios.post('/api/logout', {}, {
                 headers: {
-                    'Authorization' : `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             })
 
-            if(deletes.status === 200){
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Karyawan berhasil dihapus !'
-                })
-
-                setTimeout(() => {
-                    router.push('/employee')
-                }, 3000)
+            if(destroy.status == 200){
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                router.push('/auth/login');
             }
         }
-    })
+    });
 }
 
-onBeforeMount(async () => {
-    const res = await axios.get(`/api/employees/${route.params.id}`, {
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-    })
-
-    if(res.status === 200){
-        data.value = res.data
-    }
-})
+const go = (component) => {
+    router.push(component)
+}
 </script>
 
 <template>
-    <Topbar title="Detail Karyawan"/>
+    <Topbar title="Detail Akun"/>
     <div class="container mb-2 pb-5 px-3">
         <!-- Profile Section -->
         <div class="bg-white border-white border-0 p-3 rounded text-center mb-2">
@@ -67,14 +55,77 @@ onBeforeMount(async () => {
             </div>
         </div>
 
-        <!-- Action Button -->
-        <div class="row mb-2">
-            <div class="col me-1">
-                <router-link :to="`/employee/edit/${data.id}`" class="btn btn-dark btn-sm w-100"><span class="bi bi-pencil me-2"></span>Edit</router-link>
+        <div v-if="data.role == 'super admin' || data.role == 'admin'">
+            <div @click="go('/settings')" class="bg-white px-3 py-2 border-0 rounded mb-2">
+                <div class="row mt-2">
+                    <div class="col-2 d-flex align-items-center">
+                        <h4 class="mt-2 bi bi-gear"></h4>
+                    </div>
+                    <div class="col-10">
+                        <h6 class="fw-bold m-0 mt-1">Pengaturan</h6>
+                        <span class="fs-21 text-muted">Kelola pengaturan aplikasi</span>
+                    </div>
+                </div>
             </div>
-            <div class="col ms-1">
-                <button class="btn btn-danger btn-sm w-100" @click="destroy(data.id)"><span class="bi bi-trash me-2"></span>Delete</button>
+    
+            <div class="bg-white px-3 py-2 border-0 rounded mb-2">
+                <div class="row mt-2">
+                    <div class="col-2 d-flex align-items-center">
+                        <h4 class="mt-2 bi bi-key"></h4>
+                    </div>
+                    <div class="col-10">
+                        <h6 class="fw-bold m-0 mt-1">Keamanan</h6>
+                        <span class="fs-21 text-muted">Kelola kata sandi akun</span>
+                    </div>
+                </div>
             </div>
+
+            <div @click="go('/settings')" class="bg-white px-3 py-2 border-0 rounded mb-2">
+                <div class="row mt-2">
+                    <div class="col-2 d-flex align-items-center">
+                        <h4 class="mt-2 bi bi-moon"></h4>
+                    </div>
+                    <div class="col-10">
+                        <h6 class="fw-bold m-0 mt-1">Mode Gelap</h6>
+                        <span class="fs-21 text-muted">Aktifkan mode gelap</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-else>
+            <div class="bg-white px-3 py-2 border-0 rounded mb-2">
+                <div class="row mt-2">
+                    <div class="col-2 d-flex align-items-center">
+                        <h4 class="mt-2 bi bi-key"></h4>
+                    </div>
+                    <div class="col-10">
+                        <h6 class="fw-bold m-0 mt-1">Keamanan</h6>
+                        <span class="fs-21 text-muted">Kelola kata sandi akun</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white px-3 py-2 border-0 rounded mb-2">
+                <div class="row mt-2">
+                    <div class="col-2 d-flex align-items-center">
+                        <h4 class="mt-2 bi bi-moon"></h4>
+                    </div>
+                    <div class="col-8 ps-2">
+                        <h6 class="fw-bold m-0 mt-1">Mode Gelap</h6>
+                        <span class="fs-21 text-muted">Aktifkan mode gelap</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center">
+                        <div class="col-2 d-flex align-items-center">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="modeDark" v-model="$root.darkMode" @change="$root.setDarkMode()">
+                                <label class="form-check-label" for="modeDark"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
         </div>
 
         <!-- Detail Section -->
@@ -152,6 +203,13 @@ onBeforeMount(async () => {
                 </div>
             </div>
         </div>
+
+        <!-- logout btn -->
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-danger btn-sm w-100" @click="logout"><span class="bi bi-box-arrow-right me-2"></span>Logout</button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -164,6 +222,9 @@ onBeforeMount(async () => {
 }
 .border-none{
     border: none;
+}
+.ps-2{
+    padding-left: 12px !important;
 }
 
 /* Mobile Responsive Styles */

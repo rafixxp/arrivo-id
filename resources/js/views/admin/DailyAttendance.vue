@@ -15,22 +15,21 @@ const go = (route) => {
 
 onBeforeMount(async () => {
     try{
-        const response = await axios.get('/api/employees', {
+        const response = await axios.get('/api/attendance/daily', {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
         
         if(response.status === 200){
-            datas.value = response.data.data.data;
+            datas.value = response.data;
         }
 
-        console.log(response.data);
     }
     catch(error){
         Toast.fire({
             icon: 'error',
-            title: 'Gagal memuat data jabatan'
+            title: 'Gagal memuat data kehadiran'
         });
     }
 })
@@ -38,17 +37,17 @@ onBeforeMount(async () => {
 
 <template>
     <!-- Top Bar -->
-    <Topbar title="Karyawan"/>
+    <Topbar title="Kehadiran Harian"/>
     <div class="container mb-5">
         <div class="bg-white col-12 p-3 rounded my-2 cursor-pointer" v-for="data in datas" :key="data.id" @click="go('/employee/detail/' + data.id)">
             <div class="row align-items-center">
                 <div class="col-10">
                     <div class="d-flex align-items-center">
-                        <img :src="`https://ui-avatars.com/api/?name=${data.name}&background=0d6efd&color=fff&size=40&bold=true`" 
-                             class="rounded-circle me-3" width="45" height="45" alt="profile">
+                        <img :src="data.clockin_photo" 
+                             class="rounded me-3 object-fit-cover" width="53" height="53" alt="profile">
                         <div>
                             <h6 class="m-0 p-0 mt-1 fw-semibold">{{ data.name }}</h6>
-                            <span class="fs-21 text-muted">{{ data.email }}</span>
+                            <span class="fs-21 text-muted">{{ data.clock_in }} - <span :class="data.clockin_attend === 'Tepat' ? 'bg-success px-1 rounded text-white' : 'bg-danger px-1 rounded text-white'"> {{ data.clockin_attend }}</span></span>
                         </div>
                     </div>
                 </div>

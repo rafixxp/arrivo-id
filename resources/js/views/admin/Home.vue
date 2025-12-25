@@ -26,14 +26,14 @@ const stats = {
                 <h6 class="fw-bold">Rafi Ahfa Fauzan</h6>
             </div>
             <div class="col text-end">
-                <img src="https://ui-avatars.com/api/?name=Rafi+Ahfa&background=0d6efd&color=fff&size=45&bold=true" class="rounded-circle object-fit-cover" width="45" height="45" alt="profile">
+                <img src="https://ui-avatars.com/api/?name=Rafi+Ahfa&background=0d6efd&color=fff&size=45&bold=true" class="rounded-circle object-fit-cover" width="45" height="45" alt="profile" @click="go('/profile')">
             </div>
         </div>
 
         <!-- Dashboard Cards -->
         <div class="row mt-2 g-3">
             <!-- Total Karyawan Card -->
-            <div class="col-6 col-md-6 col-lg-3">
+            <router-link to="/employee" class="col-6 col-md-6 col-lg-3 text-decoration-none">
                 <div class="card border-0 shadow-sm h-100 bg-white">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -49,7 +49,7 @@ const stats = {
                         </div>
                     </div>
                 </div>
-            </div>
+            </router-link>
 
             <!-- Hadir Card -->
             <div class="col-6 col-md-6 col-lg-3">
