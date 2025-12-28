@@ -83,7 +83,7 @@ const submit = async () => {
                     <!-- <span class="fs-21 text-danger"><span class="bi bi-x-circle-fill text-danger"></span> Wajah Tidak Terverifikasi !</span><br> -->
                     <input type="file" accept="image/*" capture="user" ref="cameraIn" @change="previewIn" hidden>
                     <img :src="preview" alt="clock-in" class="rounded my-2 object-fit-cover" width="150" height="150" v-if="preview"><br>
-                    <div v-if="!preview" class="p-3 bg-white rounded border-1 border-dashed border-muted w-75 mx-auto button" @click="input">
+                    <div v-if="!preview" class="p-2 bg-white rounded border-1 border-dashed border-muted w-75 mx-auto button" @click="input">
                         <div class="button-cell">
                             <h5 class="bi bi-camera-fill text-muted"></h5>
                             <span class="fs-21 text-muted">Ambil foto Clock In</span>
@@ -114,7 +114,7 @@ const submit = async () => {
 .button {
     display: table;
     width: 100%;
-    height: 200px;
+    height: 100px;
 }
 .button-cell {
     display: table-cell;

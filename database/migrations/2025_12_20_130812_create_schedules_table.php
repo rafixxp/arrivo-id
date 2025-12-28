@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('user_id')->nullable();
             $table->date('date')->nullable();
             $table->string('shift')->nullable();
-            $table->bigInteger('hours_id')->nullable()->unsigned();
+            $table->time('clock_in')->nullable();
+            $table->time('late_time')->nullable();
+            $table->time('clock_out')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
         });

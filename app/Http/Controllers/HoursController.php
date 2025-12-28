@@ -31,7 +31,7 @@ class HoursController extends Controller
         $request->validate([
             'name' => 'required',
             'clock_in' => 'required',
-            'late' => 'required',
+            'late_time' => 'required',
             'clock_out' => 'required',
         ]);
 
@@ -40,7 +40,7 @@ class HoursController extends Controller
             'branches_id' => auth()->user()->branch_id,
             'name' => $request->name,
             'clock_in' => $request->clock_in,
-            'late_time' => $request->late,
+            'late_time' => $request->late_time,
             'clock_out' => $request->clock_out,
         ]);
 

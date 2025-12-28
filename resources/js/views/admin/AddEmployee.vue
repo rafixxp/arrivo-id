@@ -103,7 +103,7 @@ onBeforeMount(async () => {
             </div>
             <div class="mb-2 text-start">
                 <label for="alamat" class="form-label fs-14">Alamat</label>
-                <textarea name="" class="form-control" rows="3" v-model="data.address"></textarea>
+                <textarea name="" class="form-control fs-14" rows="5" v-model="data.address"></textarea>
             </div>
             <div class="mb-2 text-start">
                 <label for="position" class="form-label fs-14">Cabang</label>
@@ -111,11 +111,26 @@ onBeforeMount(async () => {
                     <option v-for="branch in branches" :value="branch.id">{{ branch.name }}</option>
                 </select>
             </div>
-            <div class="mb-2 text-start">
-                <label for="position" class="form-label fs-14">Jabatan</label>
-                <select class="form-select fs-14" aria-label="Default select example" v-model="data.position_id">
-                    <option v-for="position in positions" :value="position.id">{{ position.name }}</option>
-                </select>
+            <div class="row">
+                <div class="col">
+                    <div class="mb-2 text-start">
+                        <label for="position" class="form-label fs-14">Jabatan</label>
+                        <select class="form-select fs-14" aria-label="Default select example" v-model="data.position_id">
+                            <option v-for="position in positions" :value="position.id">{{ position.name }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-2 text-start">
+                        <label for="position" class="form-label fs-14">Role</label>
+                        <select class="form-select fs-14" aria-label="Default select example" v-model="data.role">
+                            <option value="">Pilih Role User</option>
+                            <option value="super admin">Super Admin</option>
+                            <option value="admin">Admin</option>
+                            <option value="employee">Employee</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="row p-0">
                 <div class="col-6">
@@ -160,5 +175,88 @@ h6{
 }
 .border-none{
     border: none;
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+    .container {
+        max-width: 750px;
+        margin: 0 auto;
+    }
+    
+    .fs-21 {
+        font-size: 13px;
+    }
+    
+    .fs-14 {
+        font-size: 14px;
+    }
+    
+    h6 {
+        font-size: 15px;
+    }
+    
+    .bg-white.p-3 {
+        padding: 1.5rem !important;
+    }
+    
+    .form-control, .form-select {
+        font-size: 14px;
+        padding: 0.75rem;
+    }
+    
+    img[width="70px"] {
+        width: 90px;
+        height: 90px;
+    }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1000px;
+    }
+    
+    .fs-21 {
+        font-size: 14px;
+    }
+    
+    .fs-14 {
+        font-size: 15px;
+    }
+    
+    h6 {
+        font-size: 16px;
+    }
+    
+    .bg-white.p-3 {
+        padding: 2rem !important;
+    }
+    
+    .form-control, .form-select {
+        font-size: 15px;
+        padding: 0.875rem;
+    }
+    
+    img[width="70px"] {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 15px;
+    }
+}
+
+/* Large desktop styles */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+    
+    .row .col {
+        max-width: 50%;
+    }
 }
 </style>

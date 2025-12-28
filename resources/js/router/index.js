@@ -22,6 +22,14 @@ import Payslip from "../views/user/Payslip.vue";
 import NotFound from "../views/NotFound.vue";
 import Forbidden from "../views/Forbidden.vue";
 import DailyAttendance from "../views/admin/DailyAttendance.vue";
+import AttendanceRecap from "../views/admin/AttendanceRecap.vue";
+import DetailAttendance from "../views/admin/DetailAttendance.vue";
+import Approval from "../views/admin/Approval.vue";
+import payslipMenu from "../views/admin/payslipMenu.vue";
+import CreateLeave from "../views/user/CreateLeave.vue";
+import DetailLeave from "../views/user/DetailLeave.vue";
+import DetailApproval from "../views/admin/DetailApproval.vue";
+import PayslipComponent from "../views/admin/PayslipComponent.vue";
 
 const routes = [
     {
@@ -86,6 +94,48 @@ const routes = [
                 }
            },
            {
+                path: '/attendance/approval',
+                component: Approval,
+                meta: {
+                    role: ['super admin']
+                }
+           },
+           {
+                path: '/attendance/approval/:id',
+                component: DetailApproval,
+                meta: {
+                    role: ['super admin']
+                }
+           },
+           {
+                path: '/attendance/recap',
+                component: AttendanceRecap,
+                meta: {
+                    role: ['super admin']
+                }
+           },
+           {
+                path: '/attendance/detail/:id',
+                component: DetailAttendance,
+                meta: {
+                    role: ['super admin']
+                }
+           },
+           {
+                path: '/payslip/menu',
+                component: payslipMenu,
+                meta: {
+                    role: ['super admin']
+                }
+           },
+           {
+                path: '/payslip/component',
+                component: PayslipComponent,
+                meta: {
+                    role: ['super admin']
+                }
+           },
+           {
                 path: '/settings',
                 component: Setting,
                 meta: {
@@ -145,6 +195,20 @@ const routes = [
            {
                 path: '/leave',
                 component: Leave,
+                meta: {
+                    role: ['employee']
+                }
+           },
+           {
+                path: '/leave/create',
+                component: CreateLeave,
+                meta: {
+                    role: ['employee']
+                }
+           },
+           {
+                path: '/leave/:id',
+                component: DetailLeave,
                 meta: {
                     role: ['employee']
                 }

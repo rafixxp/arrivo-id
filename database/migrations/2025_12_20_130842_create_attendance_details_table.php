@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('attendance_details', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('company_id')->nullable()->unsigned();
+            $table->bigInteger('branch_id')->nullable()->unsigned();
+            $table->bigInteger('attendance_id')->nullable()->unsigned();
+            $table->time('time')->nullable();
+            $table->string('attend')->nullable();
+            $table->string('type')->nullable();
+            $table->string('path')->nullable();
             $table->timestamps();
         });
     }

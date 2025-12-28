@@ -14,6 +14,9 @@ const go = (component) => {
     router.push(component)
 }
 
+const triggerIn = ref(false);
+const triggerOut = ref(false);
+
 const user = JSON.parse(localStorage.getItem('user'));
 
 onBeforeMount(async () => {
@@ -49,7 +52,7 @@ onBeforeMount(async () => {
                         <div class="card-header bg-white border-0 text-center">
                             <span class="fs-22 text-muted">{{ data.schedule.date }}</span><br>
                             <h6 class="mt-2 mb-3 fw-bold">{{ data.schedule.branch_name }}</h6>
-                            <span class="fs-22">{{ data.schedule.hour_name }} - <span :class="[data.schedule.status == 1 ? 'bg-success' : 'bg-danger', 'p-1 rounded text-white']">{{ data.schedule.status == 1 ? 'Tercatat' : 'Belum tercatat' }}</span></span>
+                            <span class="fs-22">{{ data.schedule.hour_name }} - <span :class="[data.schedule.status === 1 ? 'bg-success' : 'bg-danger', 'p-1 rounded text-white']">{{ data.schedule.status === 1 ? 'Tercatat' : 'Belum tercatat' }}</span></span>
                         </div>
                         <div class="card-body bg-success rounded p-0">
                         </div>
@@ -102,53 +105,42 @@ onBeforeMount(async () => {
                 </template>
             </div>
             
-            <div class="row g-2 mx-0 mt-1">
-                <template v-if="data.schedule">
+            <template v-if="data.schedule">
+                <div class="row mt-1 mx-0 g-1 p-0">
+                    <div class="col p-0 me-1" v-if="data.attendance.length === 0 || data.attendance[0]?.type !== 'clockin'">
+                        <div class=" bg-white py-2 px-3 text-center border border-dashed rounded" data-bs-toggle="modal" data-bs-target="#clockIn">
+                            <h4 class="bi bi-arrow-down-left-circle text-muted"></h4>
+                            <span class="fs-13 text-muted">Klik untuk Clock In</span>
+                        </div>
+                    </div>
+                    <div class="col p-0 me-1" v-else>
+                        <div class="bg-white py-2 text-center rounded">
+                            <img :src="data.attendance[0].path" class="object-fit-cover rounded" width="100" height="100" />
+                            <h6 class="fw-semibold mt-2">{{ data.attendance[0].time }}</h6>
+                            <span :class="data.attendance[0].attend == 'Tepat Waktu' ? 'fs-13 bg-success text-white p-1 rounded' : 'fs-13 bg-danger text-white p-1 rounded'">
+                                {{ data.attendance[0].attend }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="col p-0 ms-1"  v-if="data.attendance.length < 2 || data.attendance[1]?.type !== 'clockout'">
+                        <div class=" bg-white py-2 px-3 text-center border border-dashed rounded" data-bs-toggle="modal" data-bs-target="#clockOut">
+                            <h4 class="bi bi-arrow-up-right-circle text-muted"></h4>
+                            <span class="fs-13 text-muted">Klik untuk Clock Out</span>
+                        </div>
+                    </div>
+                    <div class="col p-0 ms-1" v-else>
+                        <div class="bg-white py-2 text-center rounded">
+                            <img :src="data.attendance[1].path" class="object-fit-cover rounded" width="100" height="100" />
+                            <h6 class="fw-semibold mt-2">{{ data.attendance[1].time }}</h6>
+                            <span :class="data.attendance[1].attend == 'Tepat Waktu' ? 'fs-13 bg-success text-white p-1 rounded' : 'fs-13 bg-danger text-white p-1 rounded'">
+                                {{ data.attendance[1].attend }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </template>
 
-                    <!-- CLOCK IN -->
-                    <div class="col-6 bg-white rounded border border-dashed py-2 px-3 text-center" data-bs-toggle="modal" data-bs-target="#clockIn" v-if="data.attendance.length === 0 || data.attendance[0]?.type !== 'clockin'" style="display:flex;align-items:center;justify-content:center;flex-direction:column;">
-                        <h4 class="bi bi-arrow-down-left-circle text-muted"></h4>
-                        <span class="fs-13 text-muted">Clock In</span>
-                    </div>
-
-                    <div class="col-6 rounded py-3 text-center" v-else>
-                        <img
-                            :src="data.attendance[0].path"
-                            class="object-fit-cover rounded"
-                            width="130"
-                            height="130"
-                        >
-                        <h6 class="fw-semibold mt-2">{{ data.attendance[0].time }}</h6>
-                        <span class="fs-21 bg-danger text-white p-1 rounded">
-                            {{ data.attendance[0].attend }}
-                        </span>
-                    </div>
-
-                    <!-- CLOCK OUT -->
-                    <div class="col-6 bg-white rounded border border-dashed py-2 px-3 text-center" data-bs-toggle="modal" data-bs-target="#clockOut" v-if="data.attendance.length < 2 || data.attendance[1]?.type !== 'clockout'" style="display:flex;align-items:center;justify-content:center;flex-direction:column;">
-                        <h4 class="bi bi-arrow-up-right-circle text-muted"></h4>
-                        <span class="fs-13 text-muted">Clock Out</span>
-                    </div>
-
-                    <div class="col-6 rounded py-3 text-center" v-else>
-                        <img :src="data.attendance[1].path" class="object-fit-cover rounded" width="130" height="130">
-                        <h6 class="fw-semibold mt-2">{{ data.attendance[1].time }}</h6>
-                        <span class="fs-21 bg-danger text-white p-1 rounded">{{ data.attendance[1].attend }}</span>
-                    </div>
-                </template>
-
-                <template v-else>
-                    <!-- Skeleton for clock buttons -->
-                    <div class="col bg-white rounded border border-dashed py-2 px-3 me-1 text-center skeleton-button">
-                        <div class="skeleton-icon-button skeleton-icon-in-button"></div>
-                        <div class="skeleton-line skeleton-button-text"></div>
-                    </div>
-                    <div class="col bg-white rounded border border-dashed py-2 px-3 ms-1 text-center skeleton-button">
-                        <div class="skeleton-icon-button skeleton-icon-out-button"></div>
-                        <div class="skeleton-line skeleton-button-text"></div>
-                    </div>
-                </template>
-            </div>
         </div>
 
         <div v-else-if="data.status == 'error'" class="error-container">

@@ -18,27 +18,26 @@ class AuthController extends Controller
 
         $cred = $request->only('email', 'password');
         if (Auth::attempt($cred)) {
-            $user = \DB::table('users')
-                ->where('users.email', $request->email)
-                ->join('positions', 'users.position_id', 'positions.id')
+            $user = User::where('users.email', $request->email)
+                ->rightJoin('positions', 'users.position_id', 'positions.id')
                 ->select('users.address', 'users.date_of_birth', 'users.place_of_birth', 'users.phone', 'users.email', 'users.id', 'users.name', 'users.role', 'users.branch_id', 'users.company_id', 'positions.name as position_id')
                 ->first();
 
             $users = Auth::user();
             $token = $users->createToken('auth_token')->plainTextToken;
 
-            if($user->role == 'admin' || $user->role == 'super admin'){
+            if($users->role == 'admin' || $users->role == 'super admin'){
                 return response()->json([
                     'access_token' => $token,
-                    'token_type' => 'Bearer',
+                    'tokenstype' => 'Bearer',
                     'redirect' => '/',
                     'user' => $user
                 ]);
             }
-            else if($user->role == 'employee'){
+            else if($users->role == 'employee'){
                 return response()->json([
                     'access_token' => $token,
-                    'token_type' => 'Bearer',
+                    'token_tyse' => 'Bearer',
                     'redirect' => '/home',
                     'user' => $user
                 ]);

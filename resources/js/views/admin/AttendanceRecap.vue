@@ -12,7 +12,7 @@ const router = useRouter()
 const datas = ref([])
 
 onBeforeMount(async () => {
-    const response = await axios.get('/api/attendance/schedules', {
+    const response = await axios.get('/api/attendance/recap', {
         headers:{
             'Authorization' : `Bearer ${localStorage.getItem('token')}`
         }
@@ -23,32 +23,36 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-    <Topbar title="Penjadwalan"/>
+    <Topbar title="Rekap Kehadiran"/>
     <div class="container mb-2 pb-5 px-3">
-        <div class="bg-white col-12 p-2 rounded my-2 cursor-pointer" v-for="data in datas" :key="data.id">
-            <div class="row align-items-center">
-                <div class="col-10">
-                    <div class="d-flex align-items-center">
-                        <div>
-                            <h6 class="m-0 p-0 mt-1 fw-semibold">{{ data.shift }}</h6>
-                            <span class="fs-21 m-0 p-0 text-muted">{{ data.date }}</span><br>
-                            <span class="fs-21">{{ data.clock_in }} - {{ data.clock_out }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-2 p-2">
-                    <button class="btn" type="button" data-bs-toggle="dropdown">
-                        <strong class="bi bi-chevron-right"></strong>
-                    </button>
-                </div>
-            </div>
+        <div class="bg-white rounded p-2">
+            <table class="table table-sm table-bordered fs-14">
+                <thead>
+                    <tr>
+                        <th width="200">Nama</th>
+                        <th>Sakit</th>
+                        <th>Izin</th>
+                        <th>Cuti</th>
+                        <th>Tidak Presensi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="data in datas" :key="data.id">
+                        <td>{{ data.name }}</td>
+                        <td>{{ data.present_count }}</td>
+                        <td>{{ data.on_time_count }}</td>
+                        <td>{{ data.late_count }}</td>
+                        <td>{{ data.early_count }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </template>
 
 <style scoped>
 .fs-21{
-    font-size: 12px;
+    font-size: 11px;
 }
 .fs-14{
     font-size: 13px;
@@ -56,8 +60,93 @@ onBeforeMount(async () => {
 .border-none{
     border: none;
 }
-h6{
-    font-size: 14px;
+table td{
+    padding: 8px;
+}
+table th{
+    padding: 8px;
+}
+.table-scroll{
+    overflow-y: auto;
+    max-height: 70vh;
+    padding: 6px;
+}
+.table-scroll::-webkit-scrollbar{
+    height: 8px;
+    width: 8px;
+}
+.table-scroll table{
+    min-width: 1400px;
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+    .container {
+        max-width: 750px;
+        margin: 0 auto;
+    }
+    
+    .fs-21 {
+        font-size: 12px;
+    }
+    
+    .fs-14 {
+        font-size: 14px;
+    }
+    
+    .bg-white.rounded.p-2 {
+        padding: 1rem !important;
+    }
+    
+    table td, table th {
+        padding: 12px;
+    }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1000px;
+    }
+    
+    .fs-21 {
+        font-size: 13px;
+    }
+    
+    .fs-14 {
+        font-size: 15px;
+    }
+    
+    .bg-white.rounded.p-2 {
+        padding: 1.5rem !important;
+    }
+    
+    table td, table th {
+        padding: 15px;
+    }
+    
+    .table-sm {
+        font-size: 14px;
+    }
+}
+
+/* Large desktop styles */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+    
+    .fs-21 {
+        font-size: 14px;
+    }
+    
+    .fs-14 {
+        font-size: 16px;
+    }
+    
+    table td, table th {
+        padding: 18px;
+    }
 }
 
 /* Mobile Responsive Styles */
@@ -77,6 +166,10 @@ h6{
     
     h5 {
         font-size: 16px !important;
+    }
+    
+    h6 {
+        font-size: 12px !important;
     }
     
     .btn {
@@ -162,7 +255,6 @@ h6{
 .row .col-8 {
     padding: 0.25rem 0;
 }
-
 
 /* Info cards styling */
 .bg-white.p-3:not(:first-child) {

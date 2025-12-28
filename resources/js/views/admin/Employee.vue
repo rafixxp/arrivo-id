@@ -6,6 +6,7 @@ import axios from 'axios';
 import Toast from '../../lib/toast.js';
 
 const datas = ref([])
+const loading = ref(true)
 
 const router = useRouter();
 
@@ -15,6 +16,7 @@ const go = (route) => {
 
 onBeforeMount(async () => {
     try{
+        loading.value = true;
         const response = await axios.get('/api/employees', {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -33,6 +35,9 @@ onBeforeMount(async () => {
             title: 'Gagal memuat data jabatan'
         });
     }
+    finally{
+        loading.value = false;
+    }
 })
 </script>
 
@@ -40,6 +45,37 @@ onBeforeMount(async () => {
     <!-- Top Bar -->
     <Topbar title="Karyawan"/>
     <div class="container mb-5">
+        <div class="bg-white p-1 rounded-pill">
+            <div class="row">
+                <div class="col-1 pt-1 ps-4">
+                    <span class="bi bi-search fs-13 text-muted"></span>
+                </div>
+                <div class="col-10">
+                    <input type="text" class="form-control border-0 pt-2" placeholder="Cari nama karyawan">
+                </div>
+            </div>
+        </div>
+        <div v-if="loading">
+            <div class="bg-white col-12 p-3 rounded my-2" v-for="i in 5" :key="i">
+                <div class="row align-items-center">
+                    <div class="col-10">
+                        <div class="d-flex align-items-center">
+                            <div class="skeleton skeleton-avatar me-3"></div>
+                            <div class="flex-grow-1">
+                                <div class="skeleton skeleton-name mb-2"></div>
+                                <div class="skeleton skeleton-email"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 p-2">
+                        <div class="skeleton skeleton-chevron"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Actual Data -->
+        <div v-else>
         <div class="bg-white col-12 p-3 rounded my-2 cursor-pointer" v-for="data in datas" :key="data.id" @click="go('/employee/detail/' + data.id)">
             <div class="row align-items-center">
                 <div class="col-10">
@@ -59,6 +95,7 @@ onBeforeMount(async () => {
                 </div>
             </div>
         </div>
+        </div>
         <router-link to="/employee/add" class="btn btn-dark btn-add rounded-circle"><span class="bi bi-plus"></span></router-link>
     </div>
 </template>
@@ -73,6 +110,13 @@ onBeforeMount(async () => {
 h6{
 font-size: 15px;
 }
+.form-control{
+    border: none;
+    font-size: 13px;
+}
+.form-control:focus{
+    box-shadow: none;
+}
 .btn-add{
     position: fixed;
     bottom: 14vh;
@@ -83,5 +127,138 @@ font-size: 15px;
     align-items: center;
     justify-content: center;
     font-size: 24px;
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+    .container {
+        max-width: 750px;
+        margin: 0 auto;
+    }
+    
+    .fs-21 {
+        font-size: 13px;
+    }
+    
+    .fs-22 {
+        font-size: 15px;
+    }
+    
+    h6 {
+        font-size: 16px;
+    }
+    
+    .bg-white.p-3 {
+        padding: 1.5rem !important;
+    }
+    
+    .form-control {
+        font-size: 14px;
+        padding: 0.75rem;
+    }
+    
+    img[width="45"] {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .btn-add {
+        width: 70px;
+        height: 70px;
+        bottom: 3vh;
+        right: 3vw;
+    }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1000px;
+    }
+    
+    .fs-21 {
+        font-size: 14px;
+    }
+    
+    .fs-22 {
+        font-size: 16px;
+    }
+    
+    h6 {
+        font-size: 17px;
+    }
+    
+    .bg-white.p-3 {
+        padding: 2rem !important;
+    }
+    
+    .form-control {
+        font-size: 15px;
+        padding: 0.875rem;
+    }
+    
+    img[width="45"] {
+        width: 65px;
+        height: 65px;
+    }
+    
+    .btn-add {
+        width: 75px;
+        height: 75px;
+        bottom: 2vh;
+        right: 2vw;
+    }
+}
+
+/* Large desktop styles */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+    
+    .btn-add {
+        bottom: 2vh;
+        right: 1vw;
+    }
+}
+
+/* Skeleton Loading Styles */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeleton-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.skeleton-name {
+    height: 18px;
+    width: 150px;
+}
+
+.skeleton-email {
+    height: 14px;
+    width: 200px;
+}
+
+.skeleton-chevron {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
 }
 </style>

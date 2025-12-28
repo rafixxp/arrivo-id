@@ -160,4 +160,99 @@ h6{
         font-size: 1rem !important;
     }
 }
+
+/* Tablet styles */
+@media (min-width: 768px) {
+    .container {
+        max-width: 750px;
+        margin: 0 auto;
+    }
+    
+    .fs-21 {
+        font-size: 13px;
+    }
+    
+    h6 {
+        font-size: 15px;
+    }
+    
+    .card-body {
+        padding: 1.25rem;
+    }
+    
+    .rounded-circle.p-3 {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .fs-4 {
+        font-size: 1.25rem;
+    }
+    
+    h4 {
+        font-size: 1.75rem;
+    }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1000px;
+    }
+    
+    .fs-21 {
+        font-size: 14px;
+    }
+    
+    h6 {
+        font-size: 16px;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .rounded-circle.p-3 {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .fs-4 {
+        font-size: 1.5rem;
+    }
+    
+    h4 {
+        font-size: 2rem;
+    }
+    
+    img[width="45"] {
+        width: 55px;
+        height: 55px;
+    }
+}
+
+/* Large desktop styles */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+    
+    .rounded-circle.p-3 {
+        width: 65px;
+        height: 65px;
+    }
+    
+    .fs-4 {
+        font-size: 1.75rem;
+    }
+    
+    h4 {
+        font-size: 2.25rem;
+    }
+    
+    img[width="45"] {
+        width: 60px;
+        height: 60px;
+    }
+}
 </style>

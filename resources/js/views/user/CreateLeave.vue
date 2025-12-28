@@ -4,64 +4,81 @@ import axios from 'axios'
 import Toast from '../../lib/toast'
 import Topbar from '../../components/Topbar.vue'
 import { useRoute,useRouter } from 'vue-router'
-import Swal from 'sweetalert2'
 
 const route = useRoute()
 const router = useRouter()
 
-const datas = ref([])
+const data = ({
+    type: '',
+    // attachment: '',
+    from_date: '',
+    to_date: '',
+    note: ''
+})
 
-const detail = async (id) => {
-    router.push(`/leave/${id}`)
-}
-
-onBeforeMount(async () => {
+const send = async () => {
     try {
-        const response = await axios.get('/api/leave', {
-            headers:{
+        const response = await axios.post('/api/leave', data, {
+            headers :{
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         })
-    
-        if(response.status == 200){
-            datas.value = response.data
+
+        if(response.status == 201){
+            Toast.fire({
+                icon: 'success',
+                title: 'Pengajuan berhasil terkirim !'
+            })
+
+            setTimeout(() => {
+                router.push('/leave')
+            }, 2000);
         }
     } catch (error) {
         Toast.fire({
             icon: 'error',
             title: error.response
-        })   
+        })
     }
-})
+}
 </script>
 
 <template>
-    <Topbar title="Pengajuan"/>
+    <Topbar title="Buat Pengajuan"/>
     <div class="container mb-2 pb-5 px-3">
-
-        <!-- <div class="bg-white rounded p-2">
-            <div class="row text-center">
-                <div class="col-6">
-                    <h5 class="mb-1">12</h5>
-                    <span class="fs-21 text-muted">Izin Tersedia</span>
+        <div class="bg-white p-3 rounded">
+            <div class="form-group mt-1">
+                <label for="" class="fs-21 px-1">Jenis Pengajuan</label>
+                <select name="" id="" class="form-select fs-14 mt-1" v-model="data.type">
+                    <option value="">Pilih Jenis Pengajuan</option>
+                    <option value="sakit">Sakit</option>
+                    <option value="izin">Izin</option>
+                </select>
+            </div>
+            <div class="form-group mt-1">
+                <label for="" class="fs-21 px-1">Attachment (opsional, hanya diizinkan gambar) *</label>
+                <input type="file" name="" class="form-control fs-14 mt-1">
+            </div>
+            <div class="row">
+                <div class="col-6 p-0 pe-1">
+                    <div class="form-group mt-1">
+                        <label for="" class="fs-21 px-1">Dari Tanggal</label>
+                        <input type="date" name="" class="form-control fs-14 mt-1" v-model="data.from_date">
+                    </div>
                 </div>
-                <div class="col-6">
-                    <h5 class="mb-1">0</h5>   
-                    <span class="fs-21 text-muted">Izin Digunakan</span>
+                <div class="col-6 p-0 ps-1">
+                    <div class="form-group mt-1">
+                        <label for="" class="fs-21 px-1">Sampai Tanggal</label>
+                        <input type="date" name="" class="form-control fs-14 mt-1" v-model="data.to_date">
+                    </div>
                 </div>
             </div>
-        </div> -->
-
-        <div class="bg-white rounded p-3 border-0 mt-2" v-for="data in datas" :key="data.id" @click="detail(data.id)">
-            <h6 class="mb-1 fw-semibold">{{ data.date }}</h6>
-            <p class="fs-21 mb-1 text-muted">{{ data.notes }}</p>
-            <span class="fs-21 bg-primary text-white rounded px-1 me-2">{{ data.type }}</span>
-            <span class="fs-21 bg-warning text-white rounded px-1" v-if="data.status === 'pending'"><span class="bi bi-clock pe-1"></span>Pending</span>
-            <span class="fs-21 bg-success text-white rounded px-1" v-else-if="data.status === 'approved'"><span class="bi bi-check-circle pe-1"></span>Diterima</span>
-            <span class="fs-21 bg-danger text-white rounded px-1" v-else-if="data.status === 'rejected'"><span class="bi bi-x-circle pe-1"></span>Ditolak</span>
+            <div class="form-group mt-1">
+                <label for="" class="fs-21 px-1">Catatan (opsional) *</label>
+                <textarea class="form-control fs-14 mt-1" rows="5" placeholder="Tulis catatan anda" v-model="data.note"></textarea>
+            </div>
+            <button class="btn btn-dark w-100 mt-2" @click="send"><span class="bi bi-send fs-14 me-2"></span>Kirim Pengajuan</button>
         </div>
-
-        <router-link to="/leave/create" class="btn btn-dark btn-block" @click="createLeave"><span class="bi bi-plus fs-14 me-2"></span>Buat Pengajuan</router-link>
     </div>
 </template>
 
@@ -102,7 +119,7 @@ onBeforeMount(async () => {
     }
     
     h6 {
-        font-size: 13.5px !important;
+        font-size: 12px !important;
     }
     
     .btn {

@@ -65,6 +65,6 @@ const SignIn = async () => {
     font-size: 12px;
 }
 .w-125{
-    width: 400px;
+    width: 300px;
 }
 </style>

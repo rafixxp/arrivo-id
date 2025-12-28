@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('attendance_headers', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('company_id')->nullable()->unsigned();
+            $table->bigInteger('branch_id')->nullable()->unsigned();
+            $table->bigInteger('user_id')->nullable()->unsigned();
+            $table->date('date')->nullable();
+            $table->bigInteger('schedule_id')->nullable()->unsigned();
+            $table->tinyInteger('status')->nullable();
             $table->timestamps();
         });
     }

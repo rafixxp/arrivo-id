@@ -5,11 +5,6 @@ import axios from 'axios'
 import Toast from '../../lib/toast'
 import Topbar from '../../components/Topbar.vue'
 
-const editModal = ref(null)
-const addModal = ref(null)
-let modalInstance = null
-let addModalInstance = null
-
 const branches = ref([])
 const hours = ref([])
 const employees = ref([])
@@ -93,61 +88,22 @@ onBeforeMount(async () => {
 
     employees.value = employee.data.data
 })
-
-onMounted(() => {
-    modalInstance = new Modal(editModal.value, {
-        backdrop: true,
-        keyboard: true,
-        focus: true
-    })
-
-    addModalInstance = new Modal(addModal.value, {
-        backdrop: true,
-        keyboard: true,
-        focus: true
-    })
-})
-
-onBeforeUnmount(() => {
-    modalInstance?.dispose()
-    addModalInstance?.dispose()
-})
-
-const openModal = () => {
-    addModalInstance?.hide()
-    modalInstance?.show()
-}
-
-const closeModal = () => {
-    addModalInstance?.hide()
-    modalInstance?.hide()
-}
-
-const addOpenModal = () => {
-    modalInstance?.hide()
-    addModalInstance?.show()
-}
-
-const addCloseModal = () => {
-    addModalInstance?.hide()
-    modalInstance?.hide()
-}
 </script>
 
 <template>
         <Topbar title="Penjadwalan"/>
-        <div class="modal fade" ref="editModal" tabindex="-1">
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content mx-2">
                     <div class="modal-header border-0">
                         <h5 class="modal-title">Edit Jadwal</h5>
                     </div>
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label">Shift</label>
-                            <select class="form-select">
-                                <option value="shift1">Pilih Shift</option>
-                                
+                        <div class="form-group mb-2">
+                            <label class="form-label fs-13 text-muted">Jam Kerja</label>
+                            <select class="form-select" v-model="schedules.hour_id">
+                                <option value="all">Semua Jam Kerja</option>
+                                <option v-for="hour in hours" :value="hour.id">{{ hour.name }} ({{ hour.clock_in }} - {{ hour.clock_out }})</option>
                             </select>
                         </div>
                     </div>
@@ -159,7 +115,39 @@ const addCloseModal = () => {
             </div>
         </div>
 
-        <div class="modal fade" ref="addModal" tabindex="-1">
+        <div class="modal fade" id="newModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content mx-2">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title">Tambah Jadwal</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group mb-2">
+                            <label class="form-label fs-13 text-muted">Jam Kerja</label>
+                            <select class="form-select" v-model="schedules.hour_id">
+                                <option v-for="hour in hours" :value="hour.id">{{ hour.name }} ({{ hour.clock_in }} - {{ hour.clock_out }})</option>
+                            </select>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="form-label fs-13 text-muted">Dari Tanggal</label>
+                                <input type="date" class="form-control" v-model="schedules.start_date">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fs-13 text-muted">Sampai Tanggal</label>
+                                <input type="date" class="form-control" v-model="schedules.end_date">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button class="btn btn-danger" data-bs-dismiss="modal">Batal</button>
+                        <button class="btn btn-dark" @click="generateSchedule">Simpan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content mx-2">
                     <div class="modal-header border-0">
@@ -199,7 +187,7 @@ const addCloseModal = () => {
                         </div>
                     </div>
                     <div class="modal-footer border-0">
-                        <button class="btn btn-danger" @click="addCloseModal">Batal</button>
+                        <button class="btn btn-danger" data-bs-dismiss="modal">Batal</button>
                         <button class="btn btn-dark" @click="generateSchedule">Simpan</button>
                     </div>
                 </div>
@@ -244,11 +232,11 @@ const addCloseModal = () => {
 
                                 <!-- LOOP TANGGAL, BUKAN ARRAY JADWAL -->
                                 <td v-for="date in data.dates" :key="date">
-                                    <div class="bg-white border-dashed rounded p-2" v-if="schedules.schedulesByDate[date]">
+                                    <div class="bg-white border-dashed rounded p-2" v-if="schedules.schedulesByDate[date]" data-bs-toggle="modal" data-bs-target="#editModal">
                                         <h6 class="text-muted"> {{ schedules.schedulesByDate[date].hour_name ?? '-' }}</h6>
                                         <span class="fs-21">{{schedules.schedulesByDate[date].clock_in}} - {{ schedules.schedulesByDate[date].clock_out }}</span>
                                     </div>
-                                    <div class="bg-white text-center text-align-center" v-else>
+                                    <div class="bg-white text-center text-align-center" data-bs-toggle="modal" data-bs-target="#newModal" v-else>
                                         <i class="bi bi-plus-lg fs-5 cursor-pointer d-block mt-2 fw-bold"></i>
                                         <span class="fs-21 text-muted">Tambah jadwal</span>
                                     </div>
@@ -259,8 +247,7 @@ const addCloseModal = () => {
                 </div>
             </div>
         </div>
-        <button class="btn btn-dark btn-fixed rounded-circle" @click="addOpenModal"><i class="bi bi-calendar-plus"></i></button>
-        <BottomBar/>
+        <button class="btn btn-dark btn-fixed rounded-circle" data-bs-toggle="modal" data-bs-target="#addModal"><i class="bi bi-calendar-plus"></i></button>
 </template>
 
 <style scoped>
@@ -273,7 +260,7 @@ const addCloseModal = () => {
     font-size: 19px;
 }
 .pt-0{
-    margin-top: -15px !important;
+    margin-top: -16px !important;
 }
 .fs-21{
     font-size: 11px;
@@ -292,7 +279,7 @@ h6{
 }
 table th, table td {
     min-width: 120px;
-    padding: 10px;
+    padding: 6px;
     width: auto;
 }
 

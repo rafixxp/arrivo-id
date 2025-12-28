@@ -22,6 +22,7 @@ Route::post('/signin', [App\Http\Controllers\AuthController::class, 'signIn']);
 
 Route::middleware(['auth:sanctum'])->group(function(){
     Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
+
     // api super admin & admin
     Route::get('/company', [App\Http\Controllers\CompaniesController::class, 'index']);
     Route::post('/company', [App\Http\Controllers\CompaniesController::class, 'store']);
@@ -51,10 +52,20 @@ Route::middleware(['auth:sanctum'])->group(function(){
 
     Route::get('/schedules', [App\Http\Controllers\ScheduleController::class, 'index']);
     Route::post('/schedules', [App\Http\Controllers\ScheduleController::class, 'store']);
+    Route::get('/attendance/daily', [App\Http\Controllers\AttendanceController::class, 'getAttendance']);
+    Route::post('/attendance/daily', [App\Http\Controllers\AttendanceController::class, 'getAttendance']);
+    Route::get('/attendance/detail/{id}', [App\Http\Controllers\AttendanceController::class, 'attendanceDetail']);
+
+    Route::get('/leave', [App\Http\Controllers\ApprovalController::class, 'index']);
+    Route::post('/leave', [App\Http\Controllers\ApprovalController::class, 'store']);
+    Route::get('/leave/{id}', [App\Http\Controllers\ApprovalController::class, 'show']);
+    Route::get('/approval/list', [App\Http\Controllers\ApprovalController::class, 'list']);
+    Route::put('/approval/{id}', [App\Http\Controllers\ApprovalController::class, 'update']);
 
     // api user
     Route::get('/attendance/getschedule', [App\Http\Controllers\AttendanceController::class, 'index']);
-    Route::post('/attendance/clockin', [App\Http\Controllers\AttendanceController::class, 'clockIn']);
-    Route::post('/attendance/clockout', [App\Http\Controllers\AttendanceController::class, 'clockOut']);
-    Route::get('/attendance/daily', [App\Http\Controllers\AttendanceController::class, 'getAttendance']);
+    Route::middleware('device-config')->post('/attendance/clockin', [App\Http\Controllers\AttendanceController::class, 'clockIn']);
+    Route::middleware('device-config')->post('/attendance/clockout', [App\Http\Controllers\AttendanceController::class, 'clockOut']);
+    Route::get('/attendance/schedules', [App\Http\Controllers\AttendanceController::class, 'getUserSchedule']);
+    Route::get('/attendance/recap', [App\Http\Controllers\AttendanceController::class, 'attendanceRecap']);
 });

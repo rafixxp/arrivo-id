@@ -107,7 +107,7 @@ onBeforeMount(async () => {
             </div>
             <div class="mb-2 text-start">
                 <label for="alamat" class="form-label fs-14">Alamat</label>
-                <textarea name="" class="form-control" rows="3" v-model="data.address"></textarea>
+                <textarea name="" class="form-control fs-14" rows="5" v-model="data.address"></textarea>
             </div>
             <div class="mb-2 text-start">
                 <label for="position" class="form-label fs-14">Cabang</label>

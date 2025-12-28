@@ -17,17 +17,16 @@ class ScheduleController extends Controller
         $schedules = DB::table('schedules')
             ->where('schedules.company_id', auth()->user()->company_id)
             ->join('branches', 'schedules.branches_id', 'branches.id')
-            ->join('hours', 'schedules.hours_id', 'hours.id')
             ->join('users', 'schedules.user_id', 'users.id')
             ->select(
                 'schedules.id',
                 'schedules.date',
                 'schedules.shift',
                 'schedules.status',
+                'schedules.clock_in',
+                'schedules.late_time',
+                'schedules.clock_out',
                 'branches.name as branch_name',
-                'hours.clock_in as clock_in',
-                'hours.clock_out as clock_out',
-                'hours.name as hour_name',
                 'users.id as user_id',
                 'users.name as user_name'
             )
@@ -38,13 +37,13 @@ class ScheduleController extends Controller
         $result = $schedules->groupBy('user_id')->map(function ($items) {
             return [
                 'user_name' => $items->first()->user_name,
+                'user_id' => $items->first()->user_id,
                 'schedules' => $items->map(function ($row) {
                     return [
                         'date'        => $row->date,
-                        'shift'       => $row->shift,
                         'status'      => $row->status,
                         'branch_name' => $row->branch_name,
-                        'hour_name'   => $row->hour_name,
+                        'hour_name'   => $row->shift,
                         'clock_in'    => $row->clock_in,
                         'clock_out'   => $row->clock_out,
                     ];
@@ -87,13 +86,17 @@ class ScheduleController extends Controller
         ]);
 
         $users = \DB::table('users')
-            ->where('company_id', auth()->user()->company_id)
+            ->where('users.company_id', auth()->user()->company_id)
             ->when($request->branch_id !== 'all', function ($query) use ($request) {
-                $query->where('branch_id', $request->branch_id);
+                $query->where('users.branch_id', $request->branch_id);
             })
             ->when($request->employee_id !== 'all', function ($query) use ($request) {
-                $query->where('id', $request->employee_id);
+                $query->where('users.id', $request->employee_id);
             })
+            ->when($request->hour_id !== 'all', function ($query) use ($request) {
+                $query->rightJoin('hours','users.hour_id','hours.id');
+            })
+            ->select('users.branch_id', 'users.id', 'hours.name as shift', 'hours.clock_in', 'hours.clock_out', 'hours.late_time')
             ->get();
 
         $data = [];
@@ -107,7 +110,11 @@ class ScheduleController extends Controller
                     'branches_id' => $user->branch_id,
                     'user_id' => $user->id,
                     'date' => $date->format('Y-m-d'),
-                    'hours_id' => $user->hours_id
+                    'shift' => $user->shift,
+                    'clock_in' => $user->clock_in,
+                    'late_time' => $user->late_time,
+                    'clock_out' => $user->clock_out,
+                    'status' => 1,
                 ];
             }
         }

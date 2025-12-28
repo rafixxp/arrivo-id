@@ -30,10 +30,10 @@ const user = ref(localStorage.getItem('user') ? JSON.parse(localStorage.getItem(
                 </div>
 
                 <div class="col">
-                    <a href="#" class="nav-item" :class="{ 'active': $route.fullPath === '/salary' }">
+                    <router-link to="/payslip/menu" class="nav-item" :class="{ 'active': $route.fullPath === '/payslip/menu' }">
                         <i class="bi bi-wallet"></i>
                         <span class="fs-14">Gaji</span>
-                    </a>
+                    </router-link>
                 </div>
             </div>
             

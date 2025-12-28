@@ -46,7 +46,7 @@ const filter = () => {
 onBeforeMount(async () => {
     try{
         loading.value = true;
-        const response = await axios.get('/api/attendance/daily', {
+        const response = await axios.get('/api/approval/list', {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -71,7 +71,7 @@ onBeforeMount(async () => {
 
 <template>
     <!-- Top Bar -->
-    <Topbar title="Kehadiran Harian"/>
+    <Topbar title="Approval"/>
 
     <div class="container px-2 pt-0 pb-2 position-fixed bg-white z-index-99">
         <div class="row px-3">
@@ -113,16 +113,19 @@ onBeforeMount(async () => {
         
         <!-- Actual Data -->
         <div v-else>
-            <div class="bg-white col-12 p-3 rounded my-2 cursor-pointer" v-for="data in datas" :key="data.id" @click="go('/attendance/detail/' + data.id)">
+            <div class="bg-white col-12 p-3 rounded my-2 cursor-pointer" v-for="data in datas" :key="data.id" @click="go('/attendance/approval/' + data.id)">
                 <div class="row align-items-center">
                     <div class="col-10">
                         <div class="d-flex align-items-center">
-                            <img :src="data.clockin_photo" 
-                                 class="rounded me-3 object-fit-cover" width="65px  " height="65px    " alt="profile">
+                            <img :src="data.clockin_photo ?? `https://ui-avatars.com/api/?name=${data.name}&background=0d6efd&color=fff&size=40&bold=true`" 
+                                 class="rounded me-3 object-fit-cover rounded-circle" width="60" height="60" alt="profile">
                             <div>
                                 <h6 class="my-1 fw-semibold">{{ data.name }}</h6>
                                 <p class="fs-21 text-muted mb-1">{{ data.date }}</p>
-                                <span :class="data.clockin_attend === 'Tepat Waktu' ? 'fs-21 bg-success px-1 rounded text-white' : 'fs-21 bg-danger px-1 rounded text-white'"> {{ data.clockin_attend }}</span>
+                                <span class="fs-21 bg-primary text-white px-1 rounded me-1">{{ data.type }}</span>
+                                <span class="fs-21 bg-warning text-white px-1 rounded" v-if="data.status == 'pending'"><span class="bi bi-clock pe-1"></span>Pending</span>
+                                <span class="fs-21 bg-danger text-white px-1 rounded" v-if="data.status == 'rejected'"><span class="bi bi-x-circle pe-1"></span>Ditolak</span>
+                                <span class="fs-21 bg-success text-white px-1 rounded" v-if="data.status == 'approved'"><span class="bi bi-check-circle pe-1"></span>Diterima</span>
                             </div>
                         </div>
                     </div>
@@ -166,7 +169,6 @@ h6{
     z-index: 1055;
 }
 
-
 /* Skeleton Loading Styles */
 .skeleton {
     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
@@ -204,6 +206,109 @@ h6{
     }
     100% {
         background-position: -200% 0;
+    }
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+    .container {
+        max-width: 750px;
+        margin: 0 auto;
+    }
+    
+    .fs-21 {
+        font-size: 13px;
+    }
+    
+    .fs-22 {
+        font-size: 15px;
+    }
+    
+    h6 {
+        font-size: 16px;
+    }
+    
+    .bg-white.p-3 {
+        padding: 1.5rem !important;
+    }
+    
+    .form-select {
+        font-size: 14px;
+        padding: 0.75rem;
+    }
+    
+    img[width="65"] {
+        width: 75px;
+        height: 75px;
+    }
+    
+    .btn-add {
+        width: 70px;
+        height: 70px;
+        bottom: 3vh;
+        right: 3vw;
+    }
+    
+    .skeleton-avatar {
+        width: 65px;
+        height: 65px;
+    }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1000px;
+    }
+    
+    .fs-21 {
+        font-size: 14px;
+    }
+    
+    .fs-22 {
+        font-size: 16px;
+    }
+    
+    h6 {
+        font-size: 17px;
+    }
+    
+    .bg-white.p-3 {
+        padding: 2rem !important;
+    }
+    
+    .form-select {
+        font-size: 15px;
+        padding: 0.875rem;
+    }
+    
+    img[width="65"] {
+        width: 85px;
+        height: 85px;
+    }
+    
+    .btn-add {
+        width: 75px;
+        height: 75px;
+        bottom: 2vh;
+        right: 2vw;
+    }
+    
+    .skeleton-avatar {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+/* Large desktop styles */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+    
+    .btn-add {
+        bottom: 2vh;
+        right: 1vw;
     }
 }
 </style>
