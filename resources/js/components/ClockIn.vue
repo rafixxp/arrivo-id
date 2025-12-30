@@ -4,38 +4,24 @@ import axios from 'axios'
 import imageProcessor from '../lib/imageprocessor'
 import Toast from '../lib/toast'
 
-const cameraIn = ref(null)
-const preview = ref(null)
-const image = ref(null)
-const size = ref(null)
-const clockInModal = ref(null)
+const props = defineProps({
+    preview: String,
+    image: String,
+    size: Number
+})
 
 const input = () => {
     cameraIn.value.click();
 }
 
-const previewIn = async (e) => {
-    const file = e.target.files[0];
-    if(file) {
-        preview.value = URL.createObjectURL(file);
-    }
-
-    const compress = await imageProcessor(file, 600, 0.65)
-    image.value = compress
-
-    // cek size hasil (KB)
-    const sizeKB = Math.round((compress.length * 3) / 4 / 1024)
-    size.value = sizeKB
-}
-
 const submit = async () => {
     try {
         const response = await axios.post('/api/attendance/clockin', {
-            image: image.value,
+            image: props.image,
         }, {
             headers:{
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'application/json'
             }
         })
     
@@ -58,7 +44,7 @@ const submit = async () => {
     } catch (error) {
         Toast.fire({
             icon: 'error',
-            title: error.response.data.message
+            title: error
         })
 
         console.log(error)
@@ -81,7 +67,7 @@ const submit = async () => {
                 <div class="modal-body border-0 text-center px-4">
                     <!-- <span class="fs-21 text-success"><span class="bi bi-check-circle-fill text-success"></span> Wajah Terverifikasi !</span><br> -->
                     <!-- <span class="fs-21 text-danger"><span class="bi bi-x-circle-fill text-danger"></span> Wajah Tidak Terverifikasi !</span><br> -->
-                    <input type="file" accept="image/*" capture="user" ref="cameraIn" @change="previewIn" hidden>
+                    <!-- <input type="file" accept="image/*" capture="user" ref="cameraIn" @change="previewIn" hidden> -->
                     <img :src="preview" alt="clock-in" class="rounded my-2 object-fit-cover" width="150" height="150" v-if="preview"><br>
                     <div v-if="!preview" class="p-2 bg-white rounded border-1 border-dashed border-muted w-75 mx-auto button" @click="input">
                         <div class="button-cell">

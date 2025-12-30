@@ -62,6 +62,19 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::get('/approval/list', [App\Http\Controllers\ApprovalController::class, 'list']);
     Route::put('/approval/{id}', [App\Http\Controllers\ApprovalController::class, 'update']);
 
+    Route::get('/payslip', [App\Http\Controllers\PayslipController::class, 'index']);
+    Route::get('/payslip/times', [App\Http\Controllers\PayslipController::class, 'times']);
+    Route::get('/payslip/component', [App\Http\Controllers\PayslipController::class, 'component']);
+    Route::get('/payslip/component/criteria', [App\Http\Controllers\PayslipController::class, 'criteria']);
+    Route::post('/payslip/component', [App\Http\Controllers\PayslipController::class, 'storeComponent']);
+    Route::post('/payslip/component/generate', [App\Http\Controllers\PayslipController::class, 'generateComponent']);
+    Route::get('/payslip/setting', [App\Http\Controllers\PayslipController::class, 'setting']);
+    Route::get('/payslip/setting/{id}', [App\Http\Controllers\PayslipController::class, 'settingDetail']);
+    Route::post('/payslip/setting/{id}', [App\Http\Controllers\PayslipController::class, 'editDetail']);
+    Route::post('/payslip/generate', [App\Http\Controllers\PayslipController::class, 'generatePayslip']);
+    Route::get('/payslip/lists/{id}', [App\Http\Controllers\PayslipController::class, 'listPayslip']);
+    Route::get('/payslip/details/{id}', [App\Http\Controllers\PayslipController::class, 'detailsPayslip']);
+
     // api user
     Route::get('/attendance/getschedule', [App\Http\Controllers\AttendanceController::class, 'index']);
     Route::middleware('device-config')->post('/attendance/clockin', [App\Http\Controllers\AttendanceController::class, 'clockIn']);

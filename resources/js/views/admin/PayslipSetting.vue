@@ -4,7 +4,9 @@ import Topbar from '../../components/Topbar.vue'
 import axios from 'axios';
 import Toast from '../../lib/toast.js';
 import Swal from 'sweetalert2';
+import { useRouter } from 'vue-router';
 
+const router = useRouter()
 const datas = ref([])
 const criterias = ref([])
 
@@ -13,7 +15,7 @@ const adds = ref ({
     criteria_id: '',
     type: '',
     time_id: '',
-    quantity: ''
+    quantity: '0'
 })
 
 const edit = ref({
@@ -22,8 +24,12 @@ const edit = ref({
     criteria_id: '',
     type: '',
     time_id: '',
-    quantity: ''
+    quantity: '0'
 })
+
+const go = (comp) => {
+    router.push(comp)
+}
 
 const save = async () => {
     try{
@@ -131,7 +137,7 @@ const generate = () => {
                 }
             })
 
-            if(exec.status == 200){
+            if(exec.status == 201){
                 Toast.fire({
                     icon: 'success',
                     title: 'Komponen berhasil ditambahkan ke semua karyawan'
@@ -149,7 +155,7 @@ const generate = () => {
 
 onBeforeMount(async () => {
     try{
-        const response = await axios.get('/api/payslip/component', {
+        const response = await axios.get('/api/payslip/setting', {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -204,7 +210,7 @@ onBeforeMount(async () => {
                             <div class="form-group mt-1">
                                 <label for="" class="fs-21">Kriteria</label>
                                 <select name="" id="" class="form-select fs-22" v-model="adds.criteria_id">
-                                    <option>Pilih Kriteria</option>
+                                    <option value="">Pilih Kriteria</option>
                                     <option v-for="criteria in criterias" :value="criteria.id">{{ criteria.name }}</option>
                                 </select>
                             </div>
@@ -212,7 +218,7 @@ onBeforeMount(async () => {
                         <div class="col-6 ps-1">
                             <div class="form-group mt-1">
                                 <label for="" class="fs-21">Kuantitas</label>
-                                <input type="number" name="" class="form-control fs-22" v-model="adds.quantity" value="0">
+                                <input type="number" name="" class="form-control fs-22" v-model="adds.quantity" min="0">
                             </div>
                         </div>
                     </div>
@@ -260,14 +266,14 @@ onBeforeMount(async () => {
     </div>
 
     <!-- Top Bar -->
-    <Topbar title="Komponen Gaji"/>
+    <Topbar title="Set Penggajian"/>
 
-    <div class="container px-2 pt-0 pb-2 position-fixed bg-white z-index-99">
+        <div class="container px-2 pt-0 pb-2 position-fixed bg-white z-index-99">
         <div class="row px-3">
             <div class="col-8 py-1 ps-0 pe-0">
                 <div class="bg-white px-2 rounded border border-muted d-flex align-items-center">
                     <span class="bi bi-search me-2 fs-21 text-muted"></span>
-                    <input type="search" name="" class="form-control fs-22 border-0" placeholder="Cari komponen gaji...">
+                    <input type="search" name="" class="form-control fs-22 border-0" placeholder="Cari karyawan...">
                 </div>
             </div>
             <div class="col-4 py-1 ps-0 pe-0 text-end">
@@ -277,24 +283,19 @@ onBeforeMount(async () => {
     </div>
 
     <div class="container mt-5">
-        <div class="bg-white col-12 p-3 rounded my-2 cursor-pointer" v-for="data in datas" :key="data.id">
+        <div class="bg-white col-12 p-3 rounded my-2 cursor-pointer" v-for="data in datas" :key="data.id" @click="go(`/payslip/setting/${data.id}`)">
             <div class="row align-items-center">
             <div class="col-10">
-                <h6 class="m-0">{{ data.name }}</h6>
-                <span :class="data.type  === '1' ? 'fs-21 bg-success px-1 rounded text-white' : 'fs-21 bg-danger px-1 rounded text-white'">{{ data.type  === '1' ? 'Pendapatan' : 'Potongan' }}</span>
+                <h6 class="m-0">{{ data.nama }}</h6>
+                <span class="text-muted fs-21">{{ data.branch_name }}</span>
             </div>
             <div class="col-2 p-2">
                 <button class="btn" type="button" data-bs-toggle="dropdown">
-                   <strong class="bi bi-three-dots-vertical"></strong>
+                   <strong class="bi bi-chevron-right"></strong>
                 </button>
-                <ul class="dropdown-menu py-1" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item fs-22" href="#" data-bs-toggle="modal" data-bs-target="#editModal" @click="editBranch()"><span class="fs-22 bi bi-pencil"></span> Edit</a></li>
-                    <li><a class="dropdown-item fs-22" href="#" @click="destroy()"><span class="bi bi-trash"></span> Delete</a></li>
-                </ul>
             </div>
             </div>
         </div>
-        <button class="btn btn-dark btn-add rounded-circle" data-bs-toggle="modal" data-bs-target="#branchModal"><span class="bi bi-plus"></span></button>
     </div>
 </template>
 

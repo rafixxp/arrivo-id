@@ -278,7 +278,7 @@ h6{
     border:  1px dashed #000000;
 }
 table th, table td {
-    min-width: 120px;
+    min-width: 80px;
     padding: 6px;
     width: auto;
 }
@@ -294,7 +294,7 @@ table th, table td {
     width: 8px;
 }
 .table-scroll table{
-    min-width: 1400px;
+    min-width: 800px;
 }
 .pt-6{
     padding-top: 9vh;

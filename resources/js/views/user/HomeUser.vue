@@ -3,21 +3,35 @@ import { ref,onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import ClockIn from '../../components/ClockIn.vue'
-import ClockOut from '../../components/ClockOut.vue';
-import Toast from '../../lib/toast';
+import ClockOut from '../../components/ClockOut.vue'
+import Toast from '../../lib/toast'
+import imageProcessor from '../../lib/imageprocessor';
 
 const router = useRouter();
-
 const data = ref({})
+const preview = ref('')
+const image = ref('')
+const size = ref(0)
+
+const user = JSON.parse(localStorage.getItem('user'));
+
+const previewFun = async (e) => {
+    const file = e.target.files[0];
+    if(file) {
+        preview.value = URL.createObjectURL(file);
+    }
+
+    const compress = await imageProcessor(file, 400, 0.65)
+    image.value = compress
+
+    // cek size hasil (KB)
+    const sizeKB = Math.round((compress.length * 3) / 4 / 1024)
+    size.value = sizeKB
+}
 
 const go = (component) => {
     router.push(component)
 }
-
-const triggerIn = ref(false);
-const triggerOut = ref(false);
-
-const user = JSON.parse(localStorage.getItem('user'));
 
 onBeforeMount(async () => {
     const response = await axios.get('/api/attendance/getschedule', {
@@ -32,15 +46,15 @@ onBeforeMount(async () => {
 
 <template>
     <!-- clock in - clock out -->
-    <ClockIn/>
-    <ClockOut/>
+    <ClockIn :preview="preview" :image="image" :size="size"/>
+    <ClockOut :preview="preview" :image="image" :size="size"/>
     <div class="container mt-10">
         <div class="row">
-            <div class="col">
+            <div class="col-9">
                 <span class="fs-21 text-muted">Selamat datang</span>
                 <h6 class="fw-bold">{{ user.name }}</h6>
             </div>
-            <div class="col text-end">
+            <div class="col-3 text-end">
                 <img :src="`https://ui-avatars.com/api/?name=${user.name}&background=0d6efd&color=fff&size=45&bold=true`" class="rounded-circle object-fit-cover" width="45" height="45" alt="profile" @click="go('/profile')">
             </div>
         </div>
@@ -52,7 +66,7 @@ onBeforeMount(async () => {
                         <div class="card-header bg-white border-0 text-center">
                             <span class="fs-22 text-muted">{{ data.schedule.date }}</span><br>
                             <h6 class="mt-2 mb-3 fw-bold">{{ data.schedule.branch_name }}</h6>
-                            <span class="fs-22">{{ data.schedule.hour_name }} - <span :class="[data.schedule.status === 1 ? 'bg-success' : 'bg-danger', 'p-1 rounded text-white']">{{ data.schedule.status === 1 ? 'Tercatat' : 'Belum tercatat' }}</span></span>
+                            <span class="fs-22">{{ data.schedule.hour_name }} - <span :class="data.schedule.status == 1 ? 'bg-success p-1 rounded text-white' : 'bg-danger p-1 rounded text-white'">{{ data.schedule.status == 1 ? 'Tercatat' : 'Belum tercatat' }}</span></span>
                         </div>
                         <div class="card-body bg-success rounded p-0">
                         </div>
@@ -107,13 +121,7 @@ onBeforeMount(async () => {
             
             <template v-if="data.schedule">
                 <div class="row mt-1 mx-0 g-1 p-0">
-                    <div class="col p-0 me-1" v-if="data.attendance.length === 0 || data.attendance[0]?.type !== 'clockin'">
-                        <div class=" bg-white py-2 px-3 text-center border border-dashed rounded" data-bs-toggle="modal" data-bs-target="#clockIn">
-                            <h4 class="bi bi-arrow-down-left-circle text-muted"></h4>
-                            <span class="fs-13 text-muted">Klik untuk Clock In</span>
-                        </div>
-                    </div>
-                    <div class="col p-0 me-1" v-else>
+                    <div class="col-6 pe-1" v-if="data.attendance[0]?.type === 'clockin'">
                         <div class="bg-white py-2 text-center rounded">
                             <img :src="data.attendance[0].path" class="object-fit-cover rounded" width="100" height="100" />
                             <h6 class="fw-semibold mt-2">{{ data.attendance[0].time }}</h6>
@@ -122,14 +130,8 @@ onBeforeMount(async () => {
                             </span>
                         </div>
                     </div>
-                    
-                    <div class="col p-0 ms-1"  v-if="data.attendance.length < 2 || data.attendance[1]?.type !== 'clockout'">
-                        <div class=" bg-white py-2 px-3 text-center border border-dashed rounded" data-bs-toggle="modal" data-bs-target="#clockOut">
-                            <h4 class="bi bi-arrow-up-right-circle text-muted"></h4>
-                            <span class="fs-13 text-muted">Klik untuk Clock Out</span>
-                        </div>
-                    </div>
-                    <div class="col p-0 ms-1" v-else>
+
+                    <div class="col-6 ps-1" v-if="data.attendance[1]?.type === 'clockout'">
                         <div class="bg-white py-2 text-center rounded">
                             <img :src="data.attendance[1].path" class="object-fit-cover rounded" width="100" height="100" />
                             <h6 class="fw-semibold mt-2">{{ data.attendance[1].time }}</h6>
@@ -138,6 +140,22 @@ onBeforeMount(async () => {
                             </span>
                         </div>
                     </div>
+                </div>
+            </template>
+
+            <template v-if="data.schedule">
+                <div class="text-center attendance">
+                    <!-- Show Clock In button only if there's no attendance data or no clock in yet -->
+                    <label class="btn btn-dark py-2 px-3 fs-21" data-bs-toggle="modal" data-bs-target="#clockIn" v-if="!data.attendance || data.attendance.length === 0 || data.attendance[0]?.type !== 'clockin'">
+                        <span class="bi bi-arrow-down-left-circle me-1"></span> Klik untuk clock in
+                        <input type="file" accept="image/*" capture="user" @change="previewFun" hidden>
+                    </label>
+
+                    <!-- Show Clock Out button only if there's a clock in but no clock out yet -->
+                    <label class="btn btn-dark py-2 px-3 fs-21" data-bs-toggle="modal" data-bs-target="#clockOut" v-else-if="data.attendance && data.attendance[0]?.type === 'clockin' && (!data.attendance[1] || data.attendance[1]?.type !== 'clockout')">
+                        <span class="bi bi-arrow-up-right-circle me-1"></span> Klik untuk clock out 
+                        <input type="file" accept="image/*" capture="user" @change="previewFun" hidden>
+                    </label>
                 </div>
             </template>
 
@@ -166,6 +184,12 @@ onBeforeMount(async () => {
 }
 .border-dashed{
     border-style: dashed !important;
+}
+.attendance{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 12vh;
 }
 iframe{
     width: 100%;

@@ -14,19 +14,25 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $user = \DB::table('users')->where('role', 'employee')->paginate(10);
-        return response()->json([
-            'status' => 'success',
-            'data' => $user,
-        ], 200);
+        $user = \DB::table('users')
+            ->where('company_id', auth()->user()->company_id)
+            ->when(auth()->user()->role === 'admin' || auth()->user()->role === 'super admin', function($query) {
+                // No filtering needed for admin/super admin
+            }, function($query) {
+                $query->where('role', 'employee');
+            })
+            ->simplePaginate(10);
+        return response()->json($user,200);
     }
     
     public function all()
     {
         $user = \DB::table('users')
-            ->select('name', 'id')
+            ->where('company_id', auth()->user()->company_id)
             ->where('role', 'employee')
+            ->select('name', 'id')
             ->get();
+            
         return response()->json([
             'status' => 'success',
             'data' => $user,
@@ -55,6 +61,7 @@ class EmployeeController extends Controller
             'address' => 'required|string',
             'date_of_birth' => 'required|date',
             'place_of_birth' => 'required|string',
+            'hours_id' => 'required',
             // 'password' => 'string|min:4',
         ]);
 
@@ -68,7 +75,8 @@ class EmployeeController extends Controller
             'date_of_birth' => $request->date_of_birth, 
             'place_of_birth' => $request->place_of_birth,
             'phone' => $request->phone,
-            'role' => 'employee', 
+            'role' => $request->role, 
+            'hour_id' => $request->hours_id, 
             'password' => $request->password ? Hash::make($request->password) : Hash::make('password123'), 
         ]);
 
@@ -92,9 +100,9 @@ class EmployeeController extends Controller
     public function show(string $id)
     {
         $user = \DB::table('users')
-                ->select('positions.name as position_id','users.id', 'users.branch_id', 'users.name', 'users.email', 'users.phone', 'users.address', 'users.date_of_birth', 'users.place_of_birth', 'users.role')
-                ->join('positions', 'users.position_id','positions.id')
                 ->where('users.id', $id)
+                ->select('positions.name as position_id','users.id', 'users.branch_id', 'users.name', 'users.email', 'users.phone', 'users.address', 'users.date_of_birth', 'users.place_of_birth', 'users.role')
+                ->leftJoin('positions', 'users.position_id','positions.id')
                 ->first();
 
         $user->date_of_birth = \Carbon\Carbon::parse($user->date_of_birth)->locale('id')->translatedFormat('d F Y');
@@ -140,7 +148,6 @@ class EmployeeController extends Controller
             'date_of_birth' => $request->date_of_birth, 
             'place_of_birth' => $request->place_of_birth,
             'phone' => $request->phone,
-            'role' => 'employee', 
             'password' => $request->passwords ? Hash::make($request->passwords) : \DB::table('users')->where('id', $id)->value('password'), 
         ]);
 

@@ -18,10 +18,11 @@ class AttendanceController extends Controller
     {
         // get schedules
         $schedule = \DB::table('schedules')
-            ->where('user_id', auth()->user()->id)
-            ->where('date', Carbon::now()->format('Y-m-d'))
+            ->where('schedules.user_id', auth()->user()->id)
+            ->where('schedules.date', Carbon::now()->format('Y-m-d'))
             ->join('branches', 'schedules.branches_id', 'branches.id')
-            ->select('schedules.*', 'branches.name as branch_name', 'schedules.clock_in as clock_in', 'schedules.clock_out as clock_out')
+            ->leftJoin('attendance_headers', 'schedules.id', 'attendance_headers.schedule_id')
+            ->select('schedules.*', 'branches.name as branch_name', 'schedules.clock_in as clock_in', 'schedules.clock_out as clock_out', 'attendance_headers.status as attendance_status')
             ->first();
 
         if(!$schedule){
@@ -37,7 +38,7 @@ class AttendanceController extends Controller
                 "hour_name" => $schedule->shift ?? '',
                 "clock_in" => Carbon::parse($schedule->clock_in)->format('H:i') ?? '',
                 "clock_out" => Carbon::parse($schedule->clock_out)->format('H:i') ?? '',
-                "status" => $schedule->status ?? '',
+                "status" => $schedule->attendance_status ?? '',
             ];
     
             $attendance = \DB::table('attendance_headers')
@@ -125,8 +126,8 @@ class AttendanceController extends Controller
                 'path' => asset('storage/' . $path),
                 'attend' => date('H:i:s') > $schedule->late_time ? 'Terlambat' : 'Tepat Waktu',
                 'type' => 'clockin',
-                'ip_address' => $request->ip(),
-                'device' => trim($request->header('sec-ch-ua-model'), '"')." - ".trim($request->header('sec-ch-ua-platform'), '"'),
+                'ip_address' => $request->getClientIp(),
+                'device' => trim($request->header('Sec-CH-UA-Model'), '"')." - ".trim($request->header('Sec-CH-UA-Platform'), '"'),
             ]);
 
             Storage::disk('public')->put($path, $image);
@@ -202,8 +203,9 @@ class AttendanceController extends Controller
                     ? 'Terlalu Awal'
                     : 'Tepat Waktu',
                 'type' => 'clockout',
-                'ip_address' => $request->ip(),
-                'device' => trim($request->header('sec-ch-ua-model'), '"')." - ".trim($request->header('sec-ch-ua-platform'), '"'),
+                'ip_address' => $request->getClientIp(),
+                'device' => trim($request->header('Sec-CH-UA-Model'), '"')." - ".trim($request->header('Sec-CH-UA-Platform'), '"'),
+
             ]);
 
             Storage::disk('public')->put($path, $image);

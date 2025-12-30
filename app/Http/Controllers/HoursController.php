@@ -11,7 +11,9 @@ class HoursController extends Controller
      */
     public function index()
     {
-        $hours = \DB::table('hours')->get();
+        $hours = \DB::table('hours')
+            ->where('company_id', auth()->user()->company_id)
+            ->get();
         return response()->json($hours);
     }
 

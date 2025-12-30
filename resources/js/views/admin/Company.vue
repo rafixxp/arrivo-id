@@ -47,27 +47,27 @@ onBeforeMount( async () => {
         <div class="bg-white rounded p-3">
             <div class="form-group">
                 <label for="companyName" class="fs-21">Nama Perusahaan</label>
-                <input type="text" id="companyName" class="form-control" v-model="company.name">
+                <input type="text" id="companyName" class="form-control fs-14" v-model="company.name">
             </div>
             <div class="form-group mt-2">
                 <label for="companyName" class="fs-21">Alamat</label>
-                <textarea name="address" id="address" class="form-control" rows="3" v-model="company.address"></textarea>
+                <textarea name="address" id="address" class="form-control fs-14" rows="3" v-model="company.address"></textarea>
             </div>
             <div class="form-group mt-2">
                 <label for="companyName" class="fs-21">NPWP</label>
-                <input type="text" id="companyName" class="form-control" v-model="company.npwp">
+                <input type="text" id="companyName" class="form-control fs-14" v-model="company.npwp">
             </div>
             <div class="row">
                 <div class="col">
                     <div class="form-group mt-2">
                         <label for="companyName" class="fs-21">Email</label>
-                        <input type="text" id="companyName" class="form-control" v-model="company.email">
+                        <input type="text" id="companyName" class="form-control fs-14" v-model="company.email">
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group mt-2">
                         <label for="companyName" class="fs-21">Domain</label>
-                        <input type="text" id="companyName" class="form-control" v-model="company.domain">
+                        <input type="text" id="companyName" class="form-control fs-14" v-model="company.domain">
                     </div>
                 </div>
             </div>
@@ -79,5 +79,8 @@ onBeforeMount( async () => {
 <style scoped>
 .fs-21{
     font-size: 12px;
+}
+.fs-14{
+    font-size: 14px;
 }
 </style>

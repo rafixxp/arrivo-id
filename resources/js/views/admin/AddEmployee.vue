@@ -9,6 +9,7 @@ const router = useRouter()
 
 const positions = ref([]);
 const branches = ref([]);
+const hours = ref([]);
 
 const data = ref({
     branch_id: '',
@@ -20,6 +21,7 @@ const data = ref({
     date_of_birth: '',
     place_of_birth: '',
     role: '',
+    hours_id: '',
     // start_date: '',
     // end_date: '',
     password: '',
@@ -72,6 +74,14 @@ onBeforeMount(async () => {
         }
     })
     positions.value = position.data
+
+    const hour = await axios.get('/api/hours', {
+        headers:{
+            'Authorization' : `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+
+    hours.value = hour.data
 })
 </script>
 
@@ -111,12 +121,18 @@ onBeforeMount(async () => {
                     <option v-for="branch in branches" :value="branch.id">{{ branch.name }}</option>
                 </select>
             </div>
+            <div class="mb-2 text-start">
+                <label for="position" class="form-label fs-14">Jabatan</label>
+                <select class="form-select fs-14" aria-label="Default select example" v-model="data.position_id">
+                    <option v-for="position in positions" :value="position.id">{{ position.name }}</option>
+                </select>
+            </div>
             <div class="row">
                 <div class="col">
                     <div class="mb-2 text-start">
-                        <label for="position" class="form-label fs-14">Jabatan</label>
-                        <select class="form-select fs-14" aria-label="Default select example" v-model="data.position_id">
-                            <option v-for="position in positions" :value="position.id">{{ position.name }}</option>
+                        <label for="position" class="form-label fs-14">Jam Kerja</label>
+                        <select class="form-select fs-14" aria-label="Default select example" v-model="data.hours_id">
+                            <option v-for="hour in hours" :value="hour.id">{{ hour.name }} ({{ hour.clock_in }} - {{ hour.clock_out }})</option>
                         </select>
                     </div>
                 </div>

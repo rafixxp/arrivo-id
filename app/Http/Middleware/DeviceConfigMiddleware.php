@@ -17,7 +17,7 @@ class DeviceConfigMiddleware
     {
         $response = $next($request);
 
-        $response->headers->set('Accept-CH', 'sec-ch-ua, sec-ch-ua-platform, sec-ch-ua-platform-version, sec-ch-ua-model, sec-ch-ua-mobile');
+        $response->headers->set('Accept-CH', 'Sec-CH-UA,Sec-CH-UA-Platform,Sec-CH-UA-Mobile,Sec-CH-UA-Model,Sec-CH-UA-Platform-Version,Sec-CH-UA-Full-Version');
 
         return $response;
     }

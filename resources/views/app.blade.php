@@ -29,6 +29,28 @@
         font-variation-settings:
             "wdth" 100;
         }
+        .dark-mode{
+            background-color: #021329ff;
+            color: white;
+        }
+        .dark-mode .text-muted{
+            color: white !important;
+        }
+        .dark-mode .card{
+            background-color: #021c36ff !important;
+        }
+        .dark-mode .bg-white{
+            background-color: #021c36ff !important;
+            color: white !important;
+        }
+        .dark-mode .modal .modal-content{
+            background-color: #021c36ff !important;
+            color: white !important;
+        }
+        .dark-mode .btn-primary{
+            background-color: #021c36ff !important;
+            border-color: #021c36ff !important;
+        }
     </style>
     @vite(['resources/js/app.js'])
 </head>

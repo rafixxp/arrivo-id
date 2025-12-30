@@ -4,9 +4,11 @@ import Topbar from '../../components/Topbar.vue'
 import axios from 'axios';
 import Toast from '../../lib/toast.js';
 import Swal from 'sweetalert2';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
+const route = useRoute();
 const router = useRouter();
+
 const datas = ref([])
 
 const adds = ref ({
@@ -23,45 +25,12 @@ const edit = ref({
     clock_out: ''
 })
 
-const save = async () => {
-    try{
-        const response = await axios.post('/api/payslip/generate', adds.value,
-            {
-                headers:{
-                    "Authorization":`Bearer ${localStorage.getItem('token')}`,
-                    "Content-Type":"application/json",
-                }
-            }
-        );
-
-        if(response.status === 201){
-            Toast.fire({
-                icon: 'success',
-                title: 'Berhasil menggenerate gaji !'
-            })
-            setTimeout(() => {
-                window.location.reload();
-            }, 2000)
-        }
-        else{
-            alert('Gagal menyimpan data');
-        }
-    }
-    catch(error){
-        Toast.fire({
-            icon: 'error',
-            title: 'Gagal menyimpan data'
-        });
-    }
-}
-
 const go = (page) => {
     router.push(page)
 }
-
 onBeforeMount(async () => {
     try{
-        const response = await axios.get('/api/payslip', {
+        const response = await axios.get(`/api/payslip/lists/${route.params.id}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -117,17 +86,32 @@ onBeforeMount(async () => {
     </div>
 
     <!-- Top Bar -->
-    <Topbar title="Generate Penggajian"/>
-    <div class="container">
-        <div class="bg-white col-12 p-3 rounded my-2 cursor-pointer" v-for="data in datas" :key="data.id" @click="go(`/payslip/lists/${data.id}`)">
+    <Topbar title="List Penggajian"/>
+
+    <div class="container px-2 pt-0 pb-2 position-fixed bg-white z-index-99">
+        <div class="row px-3">
+            <div class="col py-1 ps-0 pe-0">
+                <div class="bg-white px-2 rounded border border-muted d-flex align-items-center">
+                    <span class="bi bi-search me-2 fs-21 text-muted"></span>
+                    <input type="search" name="" class="form-control fs-22 border-0" placeholder="Cari karyawan...">
+                </div>
+            </div>
+            <div class="col-3 py-1 ps-0 pe-1 text-end">
+                <button class="btn btn-dark fs-22" @click="generate"><span class="bi bi-arrow-repeat me-1"></span>Rilis</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="bg-white col-12 p-3 rounded my-2 cursor-pointer" v-for="data in datas" :key="data.id" @click="go(`/payslip/details/${data.id}`)">
             <div class="row align-items-center">
             <div class="col-10">
-                <h6 class="fs-22 m-0">Periode Desember 2025</h6>
-                <span class="fs-21 text-success"><span class="bi bi-cash me-2"></span>Rp. 10.320.000</span>
+                <h6 class="fs-22 m-0">{{ data.name }}</h6>
+                <span class="fs-21 text-success"><span class="bi bi-check-circle me-2"></span>{{ data.present }}x hadir</span>
             </div>
             <div class="col-2 p-2">
                 <button class="btn" type="button" data-bs-toggle="dropdown">
-                   <strong class="bi bi-three-dots-vertical"></strong>
+                   <strong class="bi bi-chevron-right"></strong>
                 </button>
                 <ul class="dropdown-menu py-1" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item fs-22" href="#" data-bs-toggle="modal" data-bs-target="#editModal" @click="editBranch()"><span class="fs-22 bi bi-pencil"></span> Edit</a></li>
@@ -158,5 +142,8 @@ onBeforeMount(async () => {
     align-items: center;
     justify-content: center;
     font-size: 24px;
+}
+.pt-0{
+    margin-top: -17px !important;
 }
 </style>

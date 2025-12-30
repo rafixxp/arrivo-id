@@ -8,6 +8,8 @@ const go = (component) => {
     router.push(component)
 }
 
+const user = JSON.parse(localStorage.getItem('user'))
+
 // Sample data - in real app, this would come from API
 const stats = {
     present: 45,
@@ -23,10 +25,10 @@ const stats = {
         <div class="row">
             <div class="col">
                 <span class="fs-21 text-muted">Selamat datang</span>
-                <h6 class="fw-bold">Rafi Ahfa Fauzan</h6>
+                <h6 class="fw-bold">{{ user?.name ?? 'User' }}</h6>
             </div>
             <div class="col text-end">
-                <img src="https://ui-avatars.com/api/?name=Rafi+Ahfa&background=0d6efd&color=fff&size=45&bold=true" class="rounded-circle object-fit-cover" width="45" height="45" alt="profile" @click="go('/profile')">
+                <img :src="`https://ui-avatars.com/api/?name=${user?.name || ''}&background=0d6efd&color=fff&size=45&bold=true`" class="rounded-circle object-fit-cover" width="45" height="45" alt="profile" @click="go('/profile')">
             </div>
         </div>
 

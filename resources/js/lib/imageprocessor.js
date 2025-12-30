@@ -1,4 +1,4 @@
-const compressImage = (file, maxWidth = 600, quality = 0.6) => {
+const compressImage = (file, maxWidth = 500, quality = 0.6) => {
     return new Promise((resolve) => {
         const reader = new FileReader()
         reader.readAsDataURL(file)

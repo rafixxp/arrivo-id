@@ -24,10 +24,10 @@ onBeforeMount(async () => {
         });
         
         if(response.status === 200){
-            datas.value = response.data.data.data;
+            datas.value = response.data.data;
         }
 
-        console.log(response.data);
+        console.log(response);
     }
     catch(error){
         Toast.fire({

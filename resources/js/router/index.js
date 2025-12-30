@@ -30,6 +30,11 @@ import CreateLeave from "../views/user/CreateLeave.vue";
 import DetailLeave from "../views/user/DetailLeave.vue";
 import DetailApproval from "../views/admin/DetailApproval.vue";
 import PayslipComponent from "../views/admin/PayslipComponent.vue";
+import PayslipGenerate from "../views/admin/PayslipGenerate.vue";
+import PayslipSetting from "../views/admin/PayslipSetting.vue";
+import PayslipSetDetail from "../views/admin/PayslipSetDetail.vue";
+import PayslipList from "../views/admin/PayslipList.vue";
+import PayslipDetail from "../views/admin/PayslipDetail.vue";
 
 const routes = [
     {
@@ -131,6 +136,41 @@ const routes = [
            {
                 path: '/payslip/component',
                 component: PayslipComponent,
+                meta: {
+                    role: ['super admin']
+                }
+           },
+           {    
+                path: '/payslip/generate',
+                component: PayslipGenerate,
+                meta: {
+                    role: ['super admin']
+                }
+           },
+           {
+                path: '/payslip/lists/:id',
+                component: PayslipList,
+                meta: {
+                    role: ['super admin']
+                }
+           },
+           {
+                path: '/payslip/details/:id',
+                component: PayslipDetail,
+                meta: {
+                    role: ['super admin']
+                }
+           },
+           {
+                path: '/payslip/setting',
+                component: PayslipSetting,
+                meta: {
+                    role: ['super admin']
+                }
+           },
+           {
+                path: '/payslip/setting/:id',
+                component: PayslipSetDetail,
                 meta: {
                     role: ['super admin']
                 }

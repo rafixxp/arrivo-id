@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import Swal from 'sweetalert2';
 import axios from 'axios';
+import Toast from '../lib/toast';
 
 const router = useRouter();
 
@@ -22,18 +22,16 @@ const SignIn = async () => {
             router.push(response.data.redirect);
         }
         else{
-           Swal.fire({
+           Toast.fire({
                 icon: 'error',
-                title: 'Sign In Gagal !',
-                text: response.data.message || 'Periksa kembali email dan password anda',
+                title: response.data.message || 'Periksa kembali email dan password anda',
            })
         }
     }
     catch(error){
-        Swal.fire({
+        Toast.fire({
             icon: 'error',
-            title: 'Sign In Gagal !',
-            text: 'Silahkan isi email dan password',
+            title: error.response?.data?.message || 'Terjadi kesalahan saat login',
         })
     }
 }

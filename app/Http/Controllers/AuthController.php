@@ -19,7 +19,7 @@ class AuthController extends Controller
         $cred = $request->only('email', 'password');
         if (Auth::attempt($cred)) {
             $user = User::where('users.email', $request->email)
-                ->rightJoin('positions', 'users.position_id', 'positions.id')
+                ->leftJoin('positions', 'users.position_id', 'positions.id')
                 ->select('users.address', 'users.date_of_birth', 'users.place_of_birth', 'users.phone', 'users.email', 'users.id', 'users.name', 'users.role', 'users.branch_id', 'users.company_id', 'positions.name as position_id')
                 ->first();
 

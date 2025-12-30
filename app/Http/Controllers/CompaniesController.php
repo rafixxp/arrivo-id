@@ -12,7 +12,7 @@ class CompaniesController extends Controller
      */
     public function index()
     {
-        $data = \DB::table('companies')->where('id', 1)->first();
+        $data = \DB::table('companies')->where('id', auth()->user()->company_id)->first();
         return response()->json($data);
     }
 
@@ -37,7 +37,7 @@ class CompaniesController extends Controller
             'domain' => 'required',
         ]);
 
-        $company = \DB::table('companies')->insert([
+        $company = \DB::table('companies')->where('id', auth()->user()->company_id)->update([
             'name' => $request->name,
             'address' => $request->address,
             'npwp' => $request->npwp,
