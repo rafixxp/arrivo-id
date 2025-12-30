@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import Topbar from '../../components/Topbar.vue';
+import BlankBar from '../../components/BlankBar.vue';
 
 const router = useRouter();
 
@@ -21,8 +21,9 @@ const stats = {
 
 <template>
     <!-- Top Bar -->
+    <BlankBar title="Statistik Kehadiran"/>
     <div class="container mt-10">
-        <div class="row">
+        <!-- <div class="row">
             <div class="col">
                 <span class="fs-21 text-muted">Selamat datang</span>
                 <h6 class="fw-bold">{{ user?.name ?? 'User' }}</h6>
@@ -30,10 +31,10 @@ const stats = {
             <div class="col text-end">
                 <img :src="`https://ui-avatars.com/api/?name=${user?.name || ''}&background=0d6efd&color=fff&size=45&bold=true`" class="rounded-circle object-fit-cover" width="45" height="45" alt="profile" @click="go('/profile')">
             </div>
-        </div>
+        </div> -->
 
         <!-- Dashboard Cards -->
-        <div class="row mt-2 g-3">
+        <div class="row mt-4 g-3">
             <!-- Total Karyawan Card -->
             <router-link to="/employee" class="col-6 col-md-6 col-lg-3 text-decoration-none">
                 <div class="card border-0 shadow-sm h-100 bg-white">

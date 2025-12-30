@@ -44,17 +44,18 @@ onBeforeMount(async () => {
 <template>
     <!-- Top Bar -->
     <Topbar title="Karyawan"/>
-    <div class="container mb-5">
-        <div class="bg-white p-1 rounded-pill">
-            <div class="row">
-                <div class="col-1 pt-1 ps-4">
-                    <span class="bi bi-search fs-13 text-muted"></span>
-                </div>
-                <div class="col-10">
-                    <input type="text" class="form-control border-0 pt-2" placeholder="Cari nama karyawan">
+    <div class="container px-2 pt-0 pb-2 position-fixed bg-white z-index-99">
+        <div class="row px-3">
+            <div class="col-12 py-1 ps-0 pe-2">
+                <div class="bg-white px-2 rounded border border-muted d-flex align-items-center">
+                    <span class="bi bi-search me-2 fs-21 text-muted"></span>
+                    <input type="search" name="" class="form-control fs-22 border-0" placeholder="Cari karyawan..">
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="container mb-5 mt-5">
         <div v-if="loading">
             <div class="bg-white col-12 p-3 rounded my-2" v-for="i in 5" :key="i">
                 <div class="row align-items-center">
@@ -80,7 +81,7 @@ onBeforeMount(async () => {
             <div class="row align-items-center">
                 <div class="col-10">
                     <div class="d-flex align-items-center">
-                        <img :src="`https://ui-avatars.com/api/?name=${data.name}&background=0d6efd&color=fff&size=40&bold=true`" 
+                        <img :src="`/img/nopic.jpg`" 
                              class="rounded-circle me-3" width="45" height="45" alt="profile">
                         <div>
                             <h6 class="m-0 p-0 mt-1 fw-semibold">{{ data.name }}</h6>
@@ -116,6 +117,9 @@ font-size: 15px;
 }
 .form-control:focus{
     box-shadow: none;
+}
+.pt-0{
+    margin-top: -17px !important;
 }
 .btn-add{
     position: fixed;

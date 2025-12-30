@@ -25,11 +25,12 @@ class EmployeeController extends Controller
         return response()->json($user,200);
     }
     
-    public function all()
+    public function all($id)
     {
         $user = \DB::table('users')
             ->where('company_id', auth()->user()->company_id)
             ->where('role', 'employee')
+            ->where('hour_id', $id)
             ->select('name', 'id')
             ->get();
             
@@ -116,9 +117,10 @@ class EmployeeController extends Controller
     public function edit(string $id)
     {
         $user = \DB::table('users')
-                ->select('id', 'position_id','branch_id', 'name', 'email', 'phone', 'position_id', 'address', 'date_of_birth', 'place_of_birth', 'role')
+                ->select('id', 'position_id','branch_id', 'name', 'email', 'phone', 'position_id', 'address', 'date_of_birth', 'place_of_birth', 'role', 'hour_id')
                 ->where('id', $id)
                 ->first();
+
         return response()->json($user, 200);
     }
 
@@ -136,6 +138,7 @@ class EmployeeController extends Controller
             'address' => 'required|string',
             'date_of_birth' => 'required|date',
             'place_of_birth' => 'required|string',
+            'hour_id' => 'required',
             // 'password' => 'string|min:4',
         ]);
 
@@ -148,7 +151,9 @@ class EmployeeController extends Controller
             'date_of_birth' => $request->date_of_birth, 
             'place_of_birth' => $request->place_of_birth,
             'phone' => $request->phone,
-            'password' => $request->passwords ? Hash::make($request->passwords) : \DB::table('users')->where('id', $id)->value('password'), 
+            'role' => $request->role, 
+            'hour_id' => $request->hour_id, 
+            'password' => $request->has('passwords') && $request->passwords !== '' ? Hash::make($request->passwords) : \DB::table('users')->where('id', $id)->value('password'), 
         ]);
 
         if($employee){

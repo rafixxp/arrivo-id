@@ -85,27 +85,35 @@ class ScheduleController extends Controller
             'end_date' => 'required',
         ]);
 
-        $users = \DB::table('users')
-            ->where('users.company_id', auth()->user()->company_id)
-            ->when($request->branch_id !== 'all', function ($query) use ($request) {
-                $query->where('users.branch_id', $request->branch_id);
-            })
-            ->when($request->employee_id !== 'all', function ($query) use ($request) {
-                $query->where('users.id', $request->employee_id);
-            })
-            ->when($request->hour_id !== 'all', function ($query) use ($request) {
-                $query->rightJoin('hours','users.hour_id','hours.id');
-            })
-            ->select('users.branch_id', 'users.id', 'hours.name as shift', 'hours.clock_in', 'hours.clock_out', 'hours.late_time')
-            ->get();
+        $usersQuery = \DB::table('users')
+            ->where('users.company_id', auth()->user()->company_id);
+
+        // Filter branch jika tidak all
+        if ($request->branch_id !== 'all') {
+            $usersQuery->where('users.branch_id', $request->branch_id);
+        }
+        // Filter employee jika tidak all
+        if ($request->employee_id !== 'all') {
+            $usersQuery->where('users.id', $request->employee_id);
+        }
+        // Join hours jika hour_id tidak all
+        if ($request->hour_id !== 'all') {
+            $usersQuery->leftJoin('hours', 'users.hour_id', 'hours.id');
+            $usersQuery->select('users.branch_id', 'users.id', 'hours.name as shift', 'hours.clock_in', 'hours.clock_out', 'hours.late_time');
+        } else {
+            $usersQuery->select('users.branch_id', 'users.id', \DB::raw('NULL as shift'), \DB::raw('NULL as clock_in'), \DB::raw('NULL as clock_out'), \DB::raw('NULL as late_time'));
+        }
+        $users = $usersQuery->get();
 
         $data = [];
+        $headers = [];
 
         $period = Carbon::parse($request->start_date)->toPeriod($request->end_date);
 
         foreach($users as $user){
             foreach($period as $date){
-                $data[] = [
+
+                $save = \DB::table('schedules')->insertGetId([
                     'company_id' => auth()->user()->company_id,
                     'branches_id' => $user->branch_id,
                     'user_id' => $user->id,
@@ -115,11 +123,21 @@ class ScheduleController extends Controller
                     'late_time' => $user->late_time,
                     'clock_out' => $user->clock_out,
                     'status' => 1,
+                ]);
+                
+                $headers[] = [
+                    'company_id' => auth()->user()->company_id,
+                    'branch_id' => auth()->user()->branch_id,
+                    'user_id' => $user->id,
+                    'date' => $date->format('Y-m-d'),
+                    'schedule_id' => $save,
+                    'status' => 0,
+                    'type' => 'attendance'
                 ];
             }
         }
 
-        $save = \DB::table('schedules')->insert($data);
+        $save = \DB::table('attendance_headers')->insert($headers);
 
         if ($save) {
             return response()->json(['message' => 'Jadwal berhasil digenerate'], 201);

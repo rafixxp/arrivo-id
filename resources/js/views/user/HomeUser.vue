@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 import ClockIn from '../../components/ClockIn.vue'
 import ClockOut from '../../components/ClockOut.vue'
+import BlankBar from '../../components/BlankBar.vue'
 import Toast from '../../lib/toast'
 import imageProcessor from '../../lib/imageprocessor';
 
@@ -49,7 +50,8 @@ onBeforeMount(async () => {
     <ClockIn :preview="preview" :image="image" :size="size"/>
     <ClockOut :preview="preview" :image="image" :size="size"/>
     <div class="container mt-10">
-        <div class="row">
+        <BlankBar :title="user.name"/>
+        <!-- <div class="row">
             <div class="col-9">
                 <span class="fs-21 text-muted">Selamat datang</span>
                 <h6 class="fw-bold">{{ user.name }}</h6>
@@ -57,10 +59,10 @@ onBeforeMount(async () => {
             <div class="col-3 text-end">
                 <img :src="`https://ui-avatars.com/api/?name=${user.name}&background=0d6efd&color=fff&size=45&bold=true`" class="rounded-circle object-fit-cover" width="45" height="45" alt="profile" @click="go('/profile')">
             </div>
-        </div>
+        </div> -->
         
         <div v-if="data.schedule">
-            <div class="row mx-0 mt-3">
+            <div class="row mx-0 mt-5">
                 <div class="col-12 p-0">
                     <div class="card border-0 py-2" v-if="data.schedule">
                         <div class="card-header bg-white border-0 text-center">
@@ -68,7 +70,8 @@ onBeforeMount(async () => {
                             <h6 class="mt-2 mb-3 fw-bold">{{ data.schedule.branch_name }}</h6>
                             <span class="fs-22">{{ data.schedule.hour_name }} - <span :class="data.schedule.status == 1 ? 'bg-success p-1 rounded text-white' : 'bg-danger p-1 rounded text-white'">{{ data.schedule.status == 1 ? 'Tercatat' : 'Belum tercatat' }}</span></span>
                         </div>
-                        <div class="card-body bg-success rounded p-0">
+                        <div class="card-body rounded p-0">
+                            
                         </div>
                     </div>
                     

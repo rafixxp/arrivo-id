@@ -89,7 +89,7 @@ onBeforeMount(async () => {
     <Topbar title="Tambah Karyawan"/>
     <div class="container mb-2 pb-5 px-3">
         <div class="bg-white p-3 rounded text-center mb-2">
-            <img src="https://icon-library.com/images/no-profile-picture-icon/no-profile-picture-icon-1.jpg" alt="" class="img-fluid object-fit-cover rounded-circle" width="70px" height="70px"><br>
+            <img :src="'/img/nopic.jpg'" alt="" class="img-fluid object-fit-cover rounded-circle" width="70px" height="70px"><br>
             <span class="fs-21 text-muted">Tap untuk mengubah foto profil</span>
         </div>
         <div class="bg-white p-3 rounded text-center">

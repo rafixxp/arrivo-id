@@ -8,7 +8,7 @@ import Topbar from '../../components/Topbar.vue'
 const branches = ref([])
 const hours = ref([])
 const employees = ref([])
-const data = ref([])
+const data = ref({ data: [] })
 
 const schedules = ref({
     branch_id: '',
@@ -19,20 +19,31 @@ const schedules = ref({
 })
 
 const normalizedData = computed(() => {
+    if (!data.value || !Array.isArray(data.value.data)) return [];
     return data.value.data.map(user => {
         const schedulesByDate = {}
-
         // ubah array → object by date
-        user.schedules.forEach(s => {
-            schedulesByDate[s.date] = s
-        })
-
+        if (Array.isArray(user.schedules)) {
+            user.schedules.forEach(s => {
+                schedulesByDate[s.date] = s
+            })
+        }
         return {
             ...user,
             schedulesByDate
         }
     })
 })
+
+const fetchEmployee = async (id) => {
+    const employee = await axios.get(`/api/employees/hours/${id}`, {
+        headers:{
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+
+    employees.value = employee.data.data
+}
 
 const generateSchedule = async () => {
     try {
@@ -47,6 +58,10 @@ const generateSchedule = async () => {
                 icon: 'success',
                 title: 'Jadwal berhasil di generate'
             })
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000)
         }
     } catch (error) {
         Toast.fire({
@@ -79,14 +94,6 @@ onBeforeMount(async () => {
     })
 
     hours.value = hour.data
-
-    const employee = await axios.get('/api/employees/all', {
-        headers:{
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-    })
-
-    employees.value = employee.data.data
 })
 </script>
 
@@ -163,7 +170,7 @@ onBeforeMount(async () => {
                         </div>
                         <div class="form-group mb-2">
                             <label class="form-label fs-13 text-muted">Jam Kerja</label>
-                            <select class="form-select" v-model="schedules.hour_id">
+                            <select class="form-select" v-model="schedules.hour_id" @change="fetchEmployee(schedules.hour_id)">
                                 <option value="all">Semua Jam Kerja</option>
                                 <option v-for="hour in hours" :value="hour.id">{{ hour.name }} ({{ hour.clock_in }} - {{ hour.clock_out }})</option>
                             </select>

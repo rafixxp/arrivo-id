@@ -24,7 +24,7 @@ const go = (component) => {
                 </div>
             </div>
         </div>
-        <div class="bg-white col-12 p-3 rounded" @click="go('/payslip/setting')">
+        <div class="bg-white col-12 p-3 rounded mt-2" @click="go('/payslip/setting')">
             <div class="row align-items-center">
                 <div class="col-2">
                     <h1 class="bi bi-receipt mt-1"></h1>

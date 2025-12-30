@@ -8,8 +8,9 @@ import Topbar from '../../components/Topbar.vue';
 const router = useRouter()
 const route = useRoute()
 
-const positions = ref()
-const branches = ref()
+const positions = ref([])
+const branches = ref([])
+const hours = ref([])
 const data = ref({})
 
 const fetchData = async () => {
@@ -48,6 +49,16 @@ const fetchBranches = async () => {
     }
 }
 
+const fetchHours = async () => {
+    const hour = await axios.get('/api/hours', {
+        headers:{
+            'Authorization' : `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+
+    hours.value = hour.data
+}
+
 const update = async() => {
     const res = await axios.put(`/api/employees/${route.params.id}`, data.value, {
         headers: {
@@ -74,7 +85,7 @@ const update = async() => {
 }
 
 onBeforeMount(async () => {
-    await Promise.all([fetchData(), fetchPositions(), fetchBranches()])
+    await Promise.all([fetchData(), fetchPositions(), fetchBranches(), fetchHours()])
 })
 
 </script>
@@ -83,7 +94,7 @@ onBeforeMount(async () => {
     <Topbar title="Edit Karyawan"/>
     <div class="container mb-2 pb-5 px-3">
         <div class="bg-white p-3 rounded text-center mb-2">
-            <img :src="data.photo_url || 'https://icon-library.com/images/no-profile-picture-icon/no-profile-picture-icon-1.jpg'" alt="" class="img-fluid object-fit-cover rounded-circle" width="70px" height="70px"><br>
+            <img :src="data.photo_url || '/img/nopic.jpg'" alt="" class="img-fluid object-fit-cover rounded-circle" width="70px" height="70px"><br>
             <span class="fs-21 text-muted">Tap untuk mengubah foto profil</span>
         </div>
         <div class="bg-white p-3 rounded text-center">
@@ -121,6 +132,27 @@ onBeforeMount(async () => {
                     <option selected>Pilih jabatan</option>
                     <option v-for="position in positions" :key="position.id" :value="position.id">{{ position.name }}</option>
                 </select>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="mb-2 text-start">
+                        <label for="position" class="form-label fs-14">Jam Kerja</label>
+                        <select class="form-select fs-14" aria-label="Default select example" v-model="data.hour_id">
+                            <option v-for="hour in hours" :value="hour.id">{{ hour.name }} ({{ hour.clock_in }} - {{ hour.clock_out }})</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-2 text-start">
+                        <label for="position" class="form-label fs-14">Role</label>
+                        <select class="form-select fs-14" aria-label="Default select example" v-model="data.role">
+                            <option value="">Pilih Role User</option>
+                            <option value="super admin">Super Admin</option>
+                            <option value="admin">Admin</option>
+                            <option value="employee">Employee</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="row p-0">
                 <div class="col-6">

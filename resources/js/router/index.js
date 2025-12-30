@@ -1,40 +1,56 @@
-import { createRouter,createWebHistory } from "vue-router";
-import Login from "../views/login.vue";
-import MainLayout from "../layouts/MainLayout.vue";
-import AuthLayout from "../layouts/AuthLayout.vue";
-import Setting from "../views/admin/Setting.vue";
-import Company from "../views/admin/Company.vue";
-import Branches from "../views/admin/Branches.vue";
-import Position from "../views/admin/Position.vue";
-import Hours from "../views/admin/Hours.vue";
-import AttendancesMenu from "../views/admin/AttendancesMenu.vue";
-import Home from "../views/admin/Home.vue";
-import Employee from "../views/admin/Employee.vue";
-import AddEmployee from "../views/admin/AddEmployee.vue";
-import EditEmployee from "../views/admin/EditEmployee.vue";
-import DetailEmployee from "../views/admin/DetailEmployee.vue";
-import Schedule from "../views/admin/Schedule.vue";
-import Profile from "../views/admin/Profile.vue";
-import HomeUser from "../views/user/HomeUser.vue";
-import ScheduleUser from "../views/user/ScheduleUser.vue";
-import Leave from "../views/user/Leave.vue";
-import Payslip from "../views/user/Payslip.vue";
-import NotFound from "../views/NotFound.vue";
-import Forbidden from "../views/Forbidden.vue";
-import DailyAttendance from "../views/admin/DailyAttendance.vue";
-import AttendanceRecap from "../views/admin/AttendanceRecap.vue";
-import DetailAttendance from "../views/admin/DetailAttendance.vue";
-import Approval from "../views/admin/Approval.vue";
-import payslipMenu from "../views/admin/payslipMenu.vue";
-import CreateLeave from "../views/user/CreateLeave.vue";
-import DetailLeave from "../views/user/DetailLeave.vue";
-import DetailApproval from "../views/admin/DetailApproval.vue";
-import PayslipComponent from "../views/admin/PayslipComponent.vue";
-import PayslipGenerate from "../views/admin/PayslipGenerate.vue";
-import PayslipSetting from "../views/admin/PayslipSetting.vue";
-import PayslipSetDetail from "../views/admin/PayslipSetDetail.vue";
-import PayslipList from "../views/admin/PayslipList.vue";
-import PayslipDetail from "../views/admin/PayslipDetail.vue";
+import { createRouter, createWebHistory } from "vue-router";
+
+/* layouts */
+const MainLayout = () => import("../layouts/MainLayout.vue");
+const AuthLayout = () => import("../layouts/AuthLayout.vue");
+
+/* auth */
+const Login = () => import("../views/login.vue");
+
+/* admin */
+const Home = () => import("../views/admin/Home.vue");
+const Employee = () => import("../views/admin/Employee.vue");
+const AddEmployee = () => import("../views/admin/AddEmployee.vue");
+const EditEmployee = () => import("../views/admin/EditEmployee.vue");
+const DetailEmployee = () => import("../views/admin/DetailEmployee.vue");
+
+const AttendancesMenu = () => import("../views/admin/AttendancesMenu.vue");
+const Schedule = () => import("../views/admin/Schedule.vue");
+const DailyAttendance = () => import("../views/admin/DailyAttendance.vue");
+const AttendanceRecap = () => import("../views/admin/AttendanceRecap.vue");
+const DetailAttendance = () => import("../views/admin/DetailAttendance.vue");
+
+const Approval = () => import("../views/admin/Approval.vue");
+const DetailApproval = () => import("../views/admin/DetailApproval.vue");
+
+/* payslip admin */
+const PayslipMenu = () => import("../views/admin/PayslipMenu.vue");
+const PayslipComponent = () => import("../views/admin/PayslipComponent.vue");
+const PayslipGenerate = () => import("../views/admin/PayslipGenerate.vue");
+const PayslipSetting = () => import("../views/admin/PayslipSetting.vue");
+const PayslipSetDetail = () => import("../views/admin/PayslipSetDetail.vue");
+const PayslipList = () => import("../views/admin/PayslipList.vue");
+const PayslipDetail = () => import("../views/admin/PayslipDetail.vue");
+
+/* settings */
+const Setting = () => import("../views/admin/Setting.vue");
+const Company = () => import("../views/admin/Company.vue");
+const Branches = () => import("../views/admin/Branches.vue");
+const Position = () => import("../views/admin/Position.vue");
+const Hours = () => import("../views/admin/Hours.vue");
+
+/* user */
+const HomeUser = () => import("../views/user/HomeUser.vue");
+const ScheduleUser = () => import("../views/user/ScheduleUser.vue");
+const Leave = () => import("../views/user/Leave.vue");
+const CreateLeave = () => import("../views/user/CreateLeave.vue");
+const DetailLeave = () => import("../views/user/DetailLeave.vue");
+const Payslip = () => import("../views/user/Payslip.vue");
+
+/* misc */
+const Profile = () => import("../views/admin/Profile.vue");
+const NotFound = () => import("../views/NotFound.vue");
+const Forbidden = () => import("../views/Forbidden.vue");
 
 const routes = [
     {
@@ -128,7 +144,7 @@ const routes = [
            },
            {
                 path: '/payslip/menu',
-                component: payslipMenu,
+                component: PayslipMenu,
                 meta: {
                     role: ['super admin']
                 }
@@ -291,9 +307,13 @@ router.beforeEach((to, from, next) => {
     const token = localStorage.getItem('token')
     const user  = JSON.parse(localStorage.getItem('user'))
 
+    if(to.path === '/auth/login' && token && user){
+        return next(user.role === 'employee' ? '/home' : '/')
+    }
+    
     // route butuh login
     if (to.meta.role) {
-        if (!token) {
+        if (!token || !user) {
             return next('/auth/login')
         }
 

@@ -43,7 +43,7 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::delete('/hours/{id}', [App\Http\Controllers\HoursController::class, 'destroy']);
     
     Route::get('/employees', [App\Http\Controllers\EmployeeController::class, 'index']);
-    Route::get('/employees/all', [App\Http\Controllers\EmployeeController::class, 'all']);
+    Route::get('/employees/hours/{id}', [App\Http\Controllers\EmployeeController::class, 'all']);
     Route::post('/employees', [App\Http\Controllers\EmployeeController::class, 'store']);
     Route::get('/employees/{id}', [App\Http\Controllers\EmployeeController::class, 'show']);
     Route::get('/employees/{id}/edit', [App\Http\Controllers\EmployeeController::class, 'edit']);

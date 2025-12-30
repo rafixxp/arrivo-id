@@ -228,6 +228,7 @@ class AttendanceController extends Controller
         $attendance = \DB::table('attendance_headers as ah')
             ->where('ah.company_id', auth()->user()->company_id)
             ->where('ah.type', 'attendance')
+            ->where('ah.status', '1')
             ->when($request->has('filter'), function ($query) use ($request) {
                 switch($request->filter) {
                     case 'today':

@@ -85,7 +85,7 @@ const user = ref(localStorage.getItem('user') ? JSON.parse(localStorage.getItem(
 }
 
 .bottom-nav .nav-item i {
-    font-size: 17.5px;
+    font-size: 18px;
 }
 
 .bottom-nav .nav-item.active {
@@ -97,6 +97,6 @@ const user = ref(localStorage.getItem('user') ? JSON.parse(localStorage.getItem(
     transform: scale(1.1);
 }
 .fs-14{
-    font-size: 11px;
+    font-size: 12px;
 }
 </style>
