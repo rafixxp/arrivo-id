@@ -4,6 +4,14 @@ import Topbar from '../../components/Topbar.vue'
 import axios from 'axios';
 import Toast from '../../lib/toast.js';
 import Swal from 'sweetalert2';
+import { Dropdown } from 'bootstrap'
+
+onMounted(() => {
+    document.querySelectorAll('[data-bs-toggle="dropdown"]')
+        .forEach(el => {
+            new Dropdown(el)
+        })
+})
 
 const branches = ref([])
 
@@ -194,9 +202,9 @@ onBeforeMount(async () => {
                 <span class="fs-21 text-muted">{{ branch.address }}</span>
             </div>
             <div class="col-2 p-2">
-                <button class="btn" type="button" data-bs-toggle="dropdown">
+                <span class="btn border-0" type="button" data-bs-toggle="dropdown">
                    <strong class="bi bi-three-dots-vertical"></strong>
-                </button>
+                </span>
                 <ul class="dropdown-menu py-1" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item fs-22" href="#" data-bs-toggle="modal" data-bs-target="#editModal" @click="editBranch(branch)"><span class="fs-22 bi bi-pencil"></span> Edit</a></li>
                     <li><a class="dropdown-item fs-22" href="#" @click="destroy(branch.id)"><span class="bi bi-trash"></span> Delete</a></li>

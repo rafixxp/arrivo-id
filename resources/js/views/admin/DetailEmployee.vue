@@ -72,6 +72,9 @@ onBeforeMount(async () => {
             <div class="col me-1">
                 <router-link :to="`/employee/edit/${data.id}`" class="btn btn-dark btn-sm w-100"><span class="bi bi-pencil me-2"></span>Edit</router-link>
             </div>
+            <!-- <div class="col">
+                <button class="btn btn-success tn-sm w-100"><span class="bi bi-gear-wide me-2"></span>Izin</button>
+            </div> -->
             <div class="col ms-1">
                 <button class="btn btn-danger btn-sm w-100" @click="destroy(data.id)"><span class="bi bi-trash me-2"></span>Delete</button>
             </div>

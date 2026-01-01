@@ -1,18 +1,14 @@
-const CACHE_NAME = 'attendance-pwa-v2';
+const CACHE_NAME = 'attendance-pwa-v3';
 const OFFLINE_URL = '/offline.html';
 
-// Asset wajib agar install prompt muncul sebagai aplikasi
 const PRECACHE_ASSETS = [
+    '/',
     '/manifest.json',
-    '/icons/icon-192x192.webp',
-    '/icons/icon-512x512.webp',
     '/offline.html',
     '/favicon.ico',
     '/img/nopic.jpg',
-    // Tambahkan file utama JS/CSS jika perlu, contoh:
-    // '/resources/js/app.js',
-    // '/resources/css/app.css',
-    'https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap',
+    '/icons/icon-192x192.webp',
+    '/icons/icon-512x512.webp',
 ];
 
 // INSTALL
@@ -29,11 +25,9 @@ self.addEventListener('activate', event => {
     event.waitUntil(
         caches.keys().then(keys =>
             Promise.all(
-                keys.map(key => {
-                    if (key !== CACHE_NAME) {
-                        return caches.delete(key);
-                    }
-                })
+                keys
+                    .filter(key => key !== CACHE_NAME)
+                    .map(key => caches.delete(key))
             )
         )
     );
@@ -42,26 +36,37 @@ self.addEventListener('activate', event => {
 
 // FETCH
 self.addEventListener('fetch', event => {
-    if (event.request.method !== 'GET') return;
-    const url = new URL(event.request.url);
+    const { request } = event;
 
-    // Cache only same-origin requests (except font)
-    if (url.origin === location.origin || url.hostname.includes('fonts.googleapis.com')) {
-        event.respondWith(
-            caches.match(event.request)
-                .then(cachedRes => {
-                    if (cachedRes) return cachedRes;
-                    return fetch(event.request)
-                        .then(response => {
-                            if (response && response.status === 200 && response.type === 'basic') {
-                                const responseClone = response.clone();
-                                caches.open(CACHE_NAME)
-                                    .then(cache => cache.put(event.request, responseClone));
-                            }
-                            return response;
-                        })
-                        .catch(() => caches.match(OFFLINE_URL));
-                })
-        );
+    // ❌ Jangan cache non-GET
+    if (request.method !== 'GET') return;
+
+    const url = new URL(request.url);
+
+    // ❌ API / endpoint jangan disentuh cache
+    if (url.pathname.startsWith('/api')) {
+        return; // langsung ke network
     }
+
+    // ✅ Cache first untuk asset statis
+    event.respondWith(
+        caches.match(request).then(cached => {
+            if (cached) return cached;
+
+            return fetch(request)
+                .then(response => {
+                    // cache hanya asset valid
+                    if (
+                        response.status === 200 &&
+                        response.type === 'basic'
+                    ) {
+                        const clone = response.clone();
+                        caches.open(CACHE_NAME)
+                            .then(cache => cache.put(request, clone));
+                    }
+                    return response;
+                })
+                .catch(() => caches.match(OFFLINE_URL));
+        })
+    );
 });

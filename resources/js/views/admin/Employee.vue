@@ -82,15 +82,15 @@ onBeforeMount(async () => {
                 <div class="col-10">
                     <div class="d-flex align-items-center">
                         <img :src="`/img/nopic.jpg`" 
-                             class="rounded-circle me-3" width="45" height="45" alt="profile">
+                             class="rounded-circle me-3" width="48" height="48" alt="profile">
                         <div>
-                            <h6 class="m-0 p-0 mt-1 fw-semibold">{{ data.name }}</h6>
+                            <h6 class="m-0 mt-2 fw-semibold">{{ data.name }}</h6>
                             <span class="fs-21 text-muted">{{ data.email }}</span>
                         </div>
                     </div>
                 </div>
                 <div class="col-2 p-2">
-                    <button class="btn" type="button" data-bs-toggle="dropdown">
+                    <button class="btn fw-bold" type="button" data-bs-toggle="dropdown">
                         <strong class="bi bi-chevron-right"></strong>
                     </button>
                 </div>

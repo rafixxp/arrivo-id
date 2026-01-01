@@ -52,6 +52,8 @@ Route::middleware(['auth:sanctum'])->group(function(){
 
     Route::get('/schedules', [App\Http\Controllers\ScheduleController::class, 'index']);
     Route::post('/schedules', [App\Http\Controllers\ScheduleController::class, 'store']);
+    Route::post('/schedules/custom', [App\Http\Controllers\ScheduleController::class, 'addSchedule']);
+    Route::post('/schedules/update', [App\Http\Controllers\ScheduleController::class, 'update']);
     Route::get('/attendance/daily', [App\Http\Controllers\AttendanceController::class, 'getAttendance']);
     Route::post('/attendance/daily', [App\Http\Controllers\AttendanceController::class, 'getAttendance']);
     Route::get('/attendance/detail/{id}', [App\Http\Controllers\AttendanceController::class, 'attendanceDetail']);

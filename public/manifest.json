@@ -1,6 +1,6 @@
 {
-  "name": "CekIn",
-  "short_name": "✨",
+  "name": "✨",
+  "short_name": "CekIn",
   "description" : "Aplikasi Kehadiran dan Penggajian, buat proses penggajian lebih cepat hanya dalam satu klik ✨",
   "icons": [
     {
@@ -56,6 +56,7 @@
   ],
   "start_url": "/auth/login",
   "display": "standalone",
+  "orientation" : "potrait",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
   "screenshots": [

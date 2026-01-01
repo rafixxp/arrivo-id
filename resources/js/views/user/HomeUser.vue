@@ -1,14 +1,12 @@
 <script setup>
-import { ref,onBeforeMount } from 'vue';
-import { useRouter } from 'vue-router'
+import { ref, onMounted, computed, onBeforeMount } from 'vue'
 import axios from 'axios'
 import ClockIn from '../../components/ClockIn.vue'
 import ClockOut from '../../components/ClockOut.vue'
 import BlankBar from '../../components/BlankBar.vue'
 import Toast from '../../lib/toast'
-import imageProcessor from '../../lib/imageprocessor';
+import imageProcessor from '../../lib/imageprocessor'
 
-const router = useRouter();
 const data = ref({})
 const preview = ref('')
 const image = ref('')
@@ -30,19 +28,18 @@ const previewFun = async (e) => {
     size.value = sizeKB
 }
 
-const go = (component) => {
-    router.push(component)
-}
-
 onBeforeMount(async () => {
+    await getData();
+})
+
+const getData = async () => {
     const response = await axios.get('/api/attendance/getschedule', {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
     })
-
-    data.value = response.data
-})
+    data.value = response.data;
+}
 </script>
 
 <template>
@@ -64,14 +61,14 @@ onBeforeMount(async () => {
         <div v-if="data.schedule">
             <div class="row mx-0 mt-5">
                 <div class="col-12 p-0">
-                    <div class="card border-0 py-2" v-if="data.schedule">
+                    <div class="card border-0" v-if="data.schedule">
                         <div class="card-header bg-white border-0 text-center">
                             <span class="fs-22 text-muted">{{ data.schedule.date }}</span><br>
                             <h6 class="mt-2 mb-3 fw-bold">{{ data.schedule.branch_name }}</h6>
                             <span class="fs-22">{{ data.schedule.hour_name }} - <span :class="data.schedule.status == 1 ? 'bg-success p-1 rounded text-white' : 'bg-danger p-1 rounded text-white'">{{ data.schedule.status == 1 ? 'Tercatat' : 'Belum tercatat' }}</span></span>
                         </div>
-                        <div class="card-body rounded p-0">
-                            
+                        <div class="card-body rounded p-0 m-0">
+                            <div id="user-map" style="width:100%;height:103px;"></div>
                         </div>
                     </div>
                     
@@ -164,15 +161,27 @@ onBeforeMount(async () => {
 
         </div>
 
-        <div v-else-if="data.status == 'error'" class="error-container">
-           <div class="bg-white p-4 rounded-4 mt-3 text-center error-card">
-                <div class="error-icon-wrapper mb-3">
-                    <div class="error-icon  ">
-                        <i class="bi bi-exclamation-triangle"></i>
+        <div v-else-if="data.status == 'error'" class="holiday-greeting-container">
+           <div class="bg-white p-4 rounded-4 mt-5 text-center holiday-card">
+                <div class="holiday-icon-wrapper mb-3">
+                    <div class="holiday-icon">
+                        <i class="bi bi-exclamation-circle fs-4"></i>
                     </div>
                 </div>
-                <h6 class="fw-bold p-0 mb-2 error-title">Oops!</h6>
-                <span class="fs-13 text-muted error-message">{{ data.message }}</span>
+                <h6 class="fw-bold p-0 mb-2 holiday-title">Uh Oh !</h6>
+                <span class="fs-13 text-muted holiday-message">Jadwal belum di set, silahkan hubungi admin</span>
+           </div>
+        </div>
+        
+        <div v-else-if="data.status == 'libur'" class="holiday-greeting-container">
+           <div class="bg-white p-4 rounded-4 mt-5 text-center holiday-card">
+                <div class="holiday-icon-wrapper mb-3">
+                    <div class="holiday-icon">
+                        <i class="bi bi-emoji-smile"></i>
+                    </div>
+                </div>
+                <h6 class="fw-bold p-0 mb-2 holiday-title">Selamat Hari Libur!</h6>
+                <span class="fs-13 text-muted holiday-message">Hari ini adalah hari libur. Selamat beristirahat!</span>
            </div>
         </div>
     </div>

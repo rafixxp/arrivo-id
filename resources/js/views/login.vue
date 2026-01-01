@@ -127,7 +127,7 @@ const SignIn = async () => {
                     class="btn btn-sm btn-outline-dark w-100"
                     @click="showInstallPrompt"
                 >
-                    <span class="bi bi-cloud-arrow-down me-1"></span>
+                    <span class="bi bi-cloud-arrow-down"></span>
                     Install App
                 </button>
             </div>

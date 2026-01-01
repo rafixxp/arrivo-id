@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ config('app.name', 'Laravel') }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="manifest" href="{{ asset('manifest.json') }}">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -14,8 +11,11 @@
     <meta name="theme-color" content="#FFFFFF">
     <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.webp') }}">
     <style>
+        scrollbar-width: thin;
+        scrollbar-color: transparent transparent;
+
         *{
-            font-family: 'Inter', sans-serif !important;
+            font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         }
         
         /* Hide scrollbar for Chrome, Safari and Opera */
@@ -23,18 +23,6 @@
             display: none;
         }
         
-        /* Hide scrollbar for IE, Edge and Firefox */
-        scrollbar-width: thin;
-        scrollbar-color: transparent transparent;
-
-        .roboto-<uniquifier> {
-        font-family: "Roboto", sans-serif;
-        font-optical-sizing: auto;
-        font-weight: <weight>;
-        font-style: normal;
-        font-variation-settings:
-            "wdth" 100;
-        }
         .dark-mode{
             background-color: #021329ff;
             color: white;
