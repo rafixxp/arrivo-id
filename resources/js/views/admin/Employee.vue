@@ -90,8 +90,8 @@ onBeforeMount(async () => {
                     </div>
                 </div>
                 <div class="col-2 p-2">
-                    <button class="btn fw-bold" type="button" data-bs-toggle="dropdown">
-                        <strong class="bi bi-chevron-right"></strong>
+                    <button class="btn" type="button" data-bs-toggle="dropdown">
+                        <span class="bi bi-chevron-right fs-22"></span>
                     </button>
                 </div>
             </div>
@@ -109,7 +109,7 @@ onBeforeMount(async () => {
     font-size: 14px;
 }
 h6{
-font-size: 15px;
+font-size: 14px;
 }
 .form-control{
     border: none;

@@ -1,11 +1,13 @@
 <script setup>
 import { ref, onMounted, computed, onBeforeMount } from 'vue'
 import axios from 'axios'
+import { Modal } from 'bootstrap'
 import ClockIn from '../../components/ClockIn.vue'
 import ClockOut from '../../components/ClockOut.vue'
 import BlankBar from '../../components/BlankBar.vue'
-import Toast from '../../lib/toast'
 import imageProcessor from '../../lib/imageprocessor'
+import Map from '../../components/Map.vue'
+
 
 const data = ref({})
 const preview = ref('')
@@ -13,6 +15,16 @@ const image = ref('')
 const size = ref(0)
 
 const user = JSON.parse(localStorage.getItem('user'));
+
+const openModalIn = () => {
+    const modal = new Modal(document.getElementById('clockIn'));
+    modal.show();
+}
+
+const openModalOut = () => {
+    const modal = new Modal(document.getElementById('clockOut'));
+    modal.show();
+}
 
 const previewFun = async (e) => {
     const file = e.target.files[0];
@@ -62,13 +74,13 @@ const getData = async () => {
             <div class="row mx-0 mt-5">
                 <div class="col-12 p-0">
                     <div class="card border-0" v-if="data.schedule">
-                        <div class="card-header bg-white border-0 text-center">
+                        <div class="card-header bg-white border-0 text-center pb-3">
                             <span class="fs-22 text-muted">{{ data.schedule.date }}</span><br>
                             <h6 class="mt-2 mb-3 fw-bold">{{ data.schedule.branch_name }}</h6>
                             <span class="fs-22">{{ data.schedule.hour_name }} - <span :class="data.schedule.status == 1 ? 'bg-success p-1 rounded text-white' : 'bg-danger p-1 rounded text-white'">{{ data.schedule.status == 1 ? 'Tercatat' : 'Belum tercatat' }}</span></span>
                         </div>
                         <div class="card-body rounded p-0 m-0">
-                            <div id="user-map" style="width:100%;height:103px;"></div>
+                            <Map :lat="-7.329178" :lng="112.731688" title="Kantor Pusat" address="Jl. Raya Sukun No.12, Jakarta Timur" height="110px"/>
                         </div>
                     </div>
                     
@@ -146,13 +158,14 @@ const getData = async () => {
             <template v-if="data.schedule">
                 <div class="text-center attendance">
                     <!-- Show Clock In button only if there's no attendance data or no clock in yet -->
-                    <label class="btn btn-dark py-2 px-3 fs-21" data-bs-toggle="modal" data-bs-target="#clockIn" v-if="!data.attendance || data.attendance.length === 0 || data.attendance[0]?.type !== 'clockin'">
+                    <label class="btn btn-dark py-2 px-3 fs-21" data-bs-toggle="modal" data-bs-target="#clockIn" v-if="!data.attendance || data.attendance.length === 0 || data.attendance[0]?.type !== 'clockin'" @click="openModalIn">
                         <span class="bi bi-arrow-down-left-circle me-1"></span> Klik untuk clock in
                         <input type="file" accept="image/*" capture="user" @change="previewFun" hidden>
                     </label>
 
                     <!-- Show Clock Out button only if there's a clock in but no clock out yet -->
-                    <label class="btn btn-dark py-2 px-3 fs-21" data-bs-toggle="modal" data-bs-target="#clockOut" v-else-if="data.attendance && data.attendance[0]?.type === 'clockin' && (!data.attendance[1] || data.attendance[1]?.type !== 'clockout')">
+                    <label class="btn btn-dark py-2 px-3 fs-21" data-bs-toggle="modal" data-bs-target="#clockOut" v-else-if="data.attendance && data.attendance.length > 0 && data.attendance[0]?.type === 'clockin' && (!data.attendance[1] || data.attendance[1]?.type !== 'clockout')
+" @click="openModalOut">
                         <span class="bi bi-arrow-up-right-circle me-1"></span> Klik untuk clock out 
                         <input type="file" accept="image/*" capture="user" @change="previewFun" hidden>
                     </label>

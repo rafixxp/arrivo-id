@@ -41,6 +41,8 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::post('/hours', [App\Http\Controllers\HoursController::class, 'store']);
     Route::put('/hours/{id}', [App\Http\Controllers\HoursController::class, 'update']);
     Route::delete('/hours/{id}', [App\Http\Controllers\HoursController::class, 'destroy']);
+
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
     
     Route::get('/employees', [App\Http\Controllers\EmployeeController::class, 'index']);
     Route::get('/employees/hours/{id}', [App\Http\Controllers\EmployeeController::class, 'all']);

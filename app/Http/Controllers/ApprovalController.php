@@ -12,8 +12,8 @@ class ApprovalController extends Controller
     {
         $header = \DB::table('attendance_headers')
             ->where('attendance_headers.user_id', auth()->user()->id)
-            ->where('attendance_headers.type', 'leave')
-            ->leftJoin('approvals', 'attendance_headers.id', 'approvals.attendance_id')
+            ->where('attendance_headers.type', 'attendance')
+            ->join('approvals', 'attendance_headers.id', 'approvals.attendance_id')
             ->select('attendance_headers.id', 'attendance_headers.date', 'approvals.type', 'approvals.status', 'approvals.notes')
             ->get();
 
@@ -49,12 +49,21 @@ class ApprovalController extends Controller
         if($header){
             $id = $header->id;
 
+            $header = \DB::table('attendance_headers')
+                ->where('company_id', auth()->user()->company_id)
+                ->where('user_id', auth()->user()->id)
+                ->where('date', Carbon::now()->format('Y-m-d'))
+                ->update([
+                    'status' => $request->type,
+                    'type' => 'attend'
+                ]);
+
             $details = \DB::table('approvals')
                 ->insert([
                     'company_id' => auth()->user()->company_id,
                     'branch_id' => auth()->user()->branch_id,
                     'employee_id' => auth()->user()->id,
-                    'attendance_id' => $header,
+                    'attendance_id' => $id,
                     'type' => $request->type,
                     'start_date' => $request->from_date,
                     'end_date' => $request->to_date,
@@ -75,8 +84,8 @@ class ApprovalController extends Controller
                     'branch_id' => auth()->user()->branch_id,
                     'user_id' => auth()->user()->id,
                     'date' => Carbon::now()->format('Y-m-d'),
-                    'type' => 'leave',
-                    'status' => 1
+                    'type' => 'attend',
+                    'status' => $request->type
                 ]);
             
             $details = \DB::table('approvals')
@@ -84,7 +93,7 @@ class ApprovalController extends Controller
                     'company_id' => auth()->user()->company_id,
                     'branch_id' => auth()->user()->branch_id,
                     'employee_id' => auth()->user()->id,
-                    'attendance_id' => $header,
+                    'attendance_id' => $id,
                     'type' => $request->type,
                     'start_date' => $request->from_date,
                     'end_date' => $request->to_date,
@@ -123,9 +132,9 @@ class ApprovalController extends Controller
     public function list()
     {
         $approval = \DB::table('attendance_headers')
-            ->where('attendance_headers.type', 'leave')
-            ->leftJoin('approvals', 'attendance_headers.id', 'approvals.attendance_id')
-            ->leftJoin('users', 'attendance_headers.user_id', 'users.id')
+            ->where('attendance_headers.type', 'attendance')
+            ->join('approvals', 'attendance_headers.id', 'approvals.attendance_id')
+            ->join('users', 'attendance_headers.user_id', 'users.id')
             ->select('attendance_headers.id', 'attendance_headers.date', 'approvals.type', 'approvals.status', 'approvals.notes', 'users.name')
             ->get();
 

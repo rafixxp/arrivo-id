@@ -96,7 +96,7 @@ onBeforeMount(async () => {
                     </div>
 
                     <div class="modal-footer border-0">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">
+                        <button class="btn" data-bs-dismiss="modal">
                             Batal
                         </button>
                         <button
@@ -174,8 +174,7 @@ onBeforeMount(async () => {
                         class="btn btn-danger w-100"
                         data-bs-toggle="modal"
                         data-bs-target="#approvalModal"
-                        @click="form.status='rejected'; form.notes=''"
-                    >
+                        @click="form.status='rejected'">
                         <i class="bi bi-x-circle me-2"></i>Reject
                     </button>
                 </div>
@@ -184,9 +183,54 @@ onBeforeMount(async () => {
                         class="btn btn-success w-100"
                         data-bs-toggle="modal"
                         data-bs-target="#approvalModal"
-                        @click="form.status='approved'; form.notes=''"
-                    >
+                        @click="form.status='approved'">
                         <i class="bi bi-check-circle me-2"></i>Approve
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-3 rounded border-0">
+            <table class="table table-sm table-borderless mb-1">
+                <tbody class="fs-14">
+                    <tr>
+                        <td>Ditinjau oleh</td>
+                        <td>:</td>
+                        <td>{{ data.approved_by }}</td>
+                    </tr>
+                    <tr>
+                        <td>Keterangan</td>
+                        <td>:</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <textarea
+                                class="form-control fs-14"
+                                rows="5"
+                            >{{ data.approved_notes }}</textarea>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- ACTION BUTTON -->
+            <div class="row mx-0 mt-0" v-if="data.status === 'approved' || data.status === 'rejected'">
+                <div class="col-12 px-1">
+                    <label class="fs-21 text-muted">Status Approval</label>
+                    <select name="" id="" class="form-select fs-14 w-100" v-model="data.status">
+                        <option value="">Pilih Cabang</option>
+                        <option value="approved">Disetujui</option>
+                        <option value="rejected">Ditolak</option>
+                    </select>
+                </div>
+                <div class="col-12 px-1 mt-2">
+                    <button
+                        class="btn btn-success w-100"
+                        data-bs-toggle="modal"
+                        data-bs-target="#approvalModal"
+                        @click="form.status='approved'">
+                        <i class="bi bi-pencil me-1"></i>Edit Approval
                     </button>
                 </div>
             </div>
@@ -210,9 +254,6 @@ onBeforeMount(async () => {
         bottom: 12vh;
         left: 25%;
         right: 25%;
-    }
-    .form-control:focus {
-        box-shadow: none;
     }
 
     /* Mobile Responsive Styles */

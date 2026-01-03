@@ -45,6 +45,12 @@
             background-color: #021c36ff !important;
             border-color: #021c36ff !important;
         }
+        .form-control:focus {
+            box-shadow: none !important;
+        }
+        .form-select:focus {
+            box-shadow: none !important;
+        }
     </style>
     @vite(['resources/js/app.js'])
 </head>

@@ -1,6 +1,8 @@
 <script setup>
-import { useRouter } from 'vue-router';
-import BlankBar from '../../components/BlankBar.vue';
+import { onBeforeMount, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
+import BlankBar from '../../components/BlankBar.vue'
 
 const router = useRouter();
 
@@ -9,14 +11,17 @@ const go = (component) => {
 }
 
 const user = JSON.parse(localStorage.getItem('user'))
+const data = ref({})
 
-// Sample data - in real app, this would come from API
-const stats = {
-    present: 45,
-    sick: 3,
-    leave: 2,
-    total: 50
-}
+onBeforeMount(async () => {
+    const res = await axios.get('/api/home', {
+        headers:{
+            'Authorization' : `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+
+    data.value = res.data
+})
 </script>
 
 <template>
@@ -34,7 +39,7 @@ const stats = {
         </div> -->
 
         <!-- Dashboard Cards -->
-        <div class="row mt-4 g-3">
+        <div class="row mt-5 g-2">
             <!-- Total Karyawan Card -->
             <router-link to="/employee" class="col-6 col-md-6 col-lg-3 text-decoration-none">
                 <div class="card border-0 shadow-sm h-100 bg-white">
@@ -47,7 +52,7 @@ const stats = {
                             </div>
                             <div class="flex-grow-1 ms-3">
                                 <h6 class="text-muted mb-1 fs-21">Karyawan</h6>
-                                <h4 class="fw-bold mb-0 text-dark">{{ stats.total }}</h4>
+                                <h4 class="fw-bold mb-0 text-dark">{{ data.employee }}</h4>
                             </div>
                         </div>
                     </div>
@@ -55,7 +60,7 @@ const stats = {
             </router-link>
 
             <!-- Hadir Card -->
-            <div class="col-6 col-md-6 col-lg-3">
+            <router-link to="/attendance/daily" class="col-6 col-md-6 col-lg-3 text-decoration-none">
                 <div class="card border-0 shadow-sm h-100 bg-white">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -66,12 +71,12 @@ const stats = {
                             </div>
                             <div class="flex-grow-1 ms-3">
                                 <h6 class="text-muted mb-1 fs-21">Hadir</h6>
-                                <h4 class="fw-bold mb-0 text-dark">{{ stats.present }}</h4>
+                                <h4 class="fw-bold mb-0 text-dark">{{ data.attend }}</h4>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </router-link>
 
             <!-- Sakit Card -->
             <div class="col-6 col-md-6 col-lg-3">
@@ -85,7 +90,7 @@ const stats = {
                             </div>
                             <div class="flex-grow-1 ms-3">
                                 <h6 class="text-muted mb-1 fs-21">Sakit</h6>
-                                <h4 class="fw-bold mb-0 text-dark">{{ stats.sick }}</h4>
+                                <h4 class="fw-bold mb-0 text-dark">{{ data.sick }}</h4>
                             </div>
                         </div>
                     </div>
@@ -104,7 +109,45 @@ const stats = {
                             </div>
                             <div class="flex-grow-1 ms-3">
                                 <h6 class="text-muted mb-1 fs-21">Izin</h6>
-                                <h4 class="fw-bold mb-0 text-dark">{{ stats.leave }}</h4>
+                                <h4 class="fw-bold mb-0 text-dark">{{ data.leave }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alpa card -->
+            <div class="col-6 col-md-6 col-lg-3">
+                <div class="card border-0 shadow-sm h-100 bg-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="bg-info bg-opacity-10 rounded-circle p-3">
+                                    <i class="bi bi-x-circle-fill text-danger fs-4"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="text-muted mb-1 fs-21">Alpa</h6>
+                                <h4 class="fw-bold mb-0 text-dark">{{ data.alpa }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cuti -->
+            <div class="col-6 col-md-6 col-lg-3">
+                <div class="card border-0 shadow-sm h-100 bg-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="bg-dark bg-opacity-10 rounded-circle p-3">
+                                    <i class="bi bi-luggage-fill text-warning fs-4"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="text-muted mb-1 fs-21">Cuti</h6>
+                                <h4 class="fw-bold mb-0 text-dark">{{ data.leave }}</h4>
                             </div>
                         </div>
                     </div>

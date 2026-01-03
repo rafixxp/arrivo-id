@@ -58,10 +58,10 @@ onBeforeMount(async () => {
     <div class="container mb-2 pb-5 px-3">
         <!-- Profile Section -->
         <div class="bg-white border-white border-0 p-3 rounded text-center mb-2">
-            <img :src="`/img/nopic.jpg`" alt="" class="img-fluid object-fit-cover rounded-circle mb-3" width="100px" height="100px">
+            <img :src="`/img/nopic.jpg`" alt="" class="img-fluid object-fit-cover rounded-circle mb-3" width="70px" height="70px">
             <h5 class="fw-bold mb-1">{{ data.name }}</h5>
             <span class="fs-21 text-muted d-block mb-2">{{ data.position_id }}</span>
-            <div class="d-flex justify-content-center gap-2 mb-2">
+            <div class="d-flex justify-content-center gap-1 mb-2">
                 <span class="badge bg-success">Aktif</span>
                 <span class="badge bg-primary">{{ data.role }}</span>
             </div>
@@ -204,8 +204,8 @@ onBeforeMount(async () => {
     
     /* Profile picture mobile */
     .img-fluid.rounded-circle {
-        width: 80px !important;
-        height: 80px !important;
+        width: 70px !important;
+        height: 70px !important;
     }
 }
 

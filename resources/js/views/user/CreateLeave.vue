@@ -51,8 +51,8 @@ const send = async () => {
                 <label for="" class="fs-21 px-1">Jenis Pengajuan</label>
                 <select name="" id="" class="form-select fs-14 mt-1" v-model="data.type">
                     <option value="">Pilih Jenis Pengajuan</option>
-                    <option value="sakit">Sakit</option>
-                    <option value="izin">Izin</option>
+                    <option value="2">Sakit</option>
+                    <option value="3">Izin</option>
                 </select>
             </div>
             <div class="form-group mt-1">

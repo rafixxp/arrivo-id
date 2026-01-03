@@ -117,15 +117,14 @@ onBeforeMount(async () => {
                 <div class="row align-items-center">
                     <div class="col-10">
                         <div class="d-flex align-items-center">
-                            <img :src="data.clockin_photo ?? `https://ui-avatars.com/api/?name=${data.name}&background=0d6efd&color=fff&size=40&bold=true`" 
-                                 class="rounded me-3 object-fit-cover rounded-circle" width="60" height="60" alt="profile">
+                            <img :src="data.clockin_photo ?? `/img/nopic.jpg`" class="rounded me-3 object-fit-cover rounded-circle" width="60" height="60" alt="profile">
                             <div>
                                 <h6 class="my-1 fw-semibold">{{ data.name }}</h6>
                                 <p class="fs-21 text-muted mb-1">{{ data.date }}</p>
                                 <span class="fs-21 bg-primary text-white px-1 rounded me-1">{{ data.type }}</span>
                                 <span class="fs-21 bg-warning text-white px-1 rounded" v-if="data.status == 'pending'"><span class="bi bi-clock pe-1"></span>Pending</span>
                                 <span class="fs-21 bg-danger text-white px-1 rounded" v-if="data.status == 'rejected'"><span class="bi bi-x-circle pe-1"></span>Ditolak</span>
-                                <span class="fs-21 bg-success text-white px-1 rounded" v-if="data.status == 'approved'"><span class="bi bi-check-circle pe-1"></span>Diterima</span>
+                                <span class="fs-21 bg-success text-white px-1 rounded" v-if="data.status == 'approved'"><span class="bi bi-check-circle pe-1"></span>Disetujui</span>
                             </div>
                         </div>
                     </div>

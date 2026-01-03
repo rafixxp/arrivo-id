@@ -116,6 +116,11 @@ class AttendanceController extends Controller
                 ]);
             } else {
                 $headerId = $header->id;
+                $headerUpdate = \DB::table('attendance_headers')
+                    ->where('id', $header->id)
+                    ->update([
+                        'status' => 1
+                    ]);
             }
 
             DB::table('attendance_details')->insert([
