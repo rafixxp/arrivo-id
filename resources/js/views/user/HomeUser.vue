@@ -76,11 +76,11 @@ const getData = async () => {
                     <div class="card border-0" v-if="data.schedule">
                         <div class="card-header bg-white border-0 text-center pb-3">
                             <span class="fs-22 text-muted">{{ data.schedule.date }}</span><br>
-                            <h6 class="mt-2 mb-3 fw-bold">{{ data.schedule.branch_name }}</h6>
+                            <h6 class="mt-2 mb-2 fw-bold">{{ data.schedule.branch_name }}</h6>
                             <span class="fs-22">{{ data.schedule.hour_name }} - <span :class="data.schedule.status == 1 ? 'bg-success p-1 rounded text-white' : 'bg-danger p-1 rounded text-white'">{{ data.schedule.status == 1 ? 'Tercatat' : 'Belum tercatat' }}</span></span>
                         </div>
                         <div class="card-body rounded p-0 m-0">
-                            <Map :lat="-7.329178" :lng="112.731688" title="Kantor Pusat" address="Jl. Raya Sukun No.12, Jakarta Timur" height="110px"/>
+                            <Map/>
                         </div>
                     </div>
                     

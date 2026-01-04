@@ -30,19 +30,19 @@ onBeforeMount(async () => {
                 <thead>
                     <tr>
                         <th width="200">Nama</th>
+                        <th>Hadir</th>
                         <th>Sakit</th>
                         <th>Izin</th>
-                        <th>Cuti</th>
-                        <th>Tidak Presensi</th>
+                        <th>Alpa</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="data in datas" :key="data.id">
                         <td>{{ data.name }}</td>
-                        <td>{{ data.present_count }}</td>
-                        <td>{{ data.on_time_count }}</td>
-                        <td>{{ data.late_count }}</td>
-                        <td>{{ data.early_count }}</td>
+                        <td>{{ data.hadir }}</td>
+                        <td>{{ data.sakit }}</td>
+                        <td>{{ data.izin }}</td>
+                        <td>{{ data.alpa }}</td>
                     </tr>
                 </tbody>
             </table>

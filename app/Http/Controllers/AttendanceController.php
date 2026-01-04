@@ -323,15 +323,13 @@ class AttendanceController extends Controller
             ->where('attendance_headers.company_id', auth()->user()->company_id)
             ->leftJoin('users', 'attendance_headers.user_id', 'users.id')
             ->leftJoin('attendance_details', 'attendance_headers.id', 'attendance_details.attendance_id')
+            ->leftJoin('approvals', 'attendance_headers.id', 'approvals.attendance_id')
             ->select(
                 'users.name',
-                \DB::raw("COUNT(CASE WHEN attendance_headers.status = '1' THEN 1 END) as present_count"),
-                \DB::raw("COUNT(CASE WHEN attendance_details.attend = 'Tepat Waktu' THEN 1 END) as on_time_count"),
-                \DB::raw("COUNT(CASE WHEN attendance_details.attend = 'Terlambat' THEN 1 END) as late_count"),
-                \DB::raw("COUNT(CASE WHEN attendance_details.attend = 'Terlalu Awal' THEN 1 END) as early_count"),
-                \DB::raw("COUNT(CASE WHEN attendance_details.attend = 'Sakit' THEN 1 END) as sick_count"),
-                \DB::raw("COUNT(CASE WHEN attendance_details.attend = 'Izin' THEN 1 END) as late_count"),
-                \DB::raw("COUNT(CASE WHEN attendance_details.attend = 'Cuti' THEN 1 END) as early_count"),
+                \DB::raw("COUNT(CASE WHEN attendance_headers.status = '1' THEN 1 END) as hadir"),
+                \DB::raw("COUNT(CASE WHEN approvals.type = 'sakit' THEN 1 END) as sakit"),
+                \DB::raw("COUNT(CASE WHEN approvals.type = 'izin' THEN 1 END) as izin"),
+                \DB::raw("COUNT(CASE WHEN attendance_headers.status = '0' THEN 1 END) as alpa"),
                 // \DB::raw("COUNT(CASE WHEN attendance_headers.status = null THEN 1 END) as absent_count")
             )
             ->groupBy('users.name')

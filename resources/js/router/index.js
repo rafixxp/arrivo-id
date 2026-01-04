@@ -51,6 +51,7 @@ const Payslip = () => import("../views/user/Payslip.vue");
 const Profile = () => import("../views/admin/Profile.vue");
 const NotFound = () => import("../views/NotFound.vue");
 const Forbidden = () => import("../views/Forbidden.vue");
+const Offline = () => import("../views/Offline.vue")
 
 const routes = [
     {
@@ -295,6 +296,10 @@ const routes = [
     {
         path: '/forbidden',
         component: Forbidden
+    },
+    {
+        path: '/offline',
+        component: Offline
     }
 ];  
 
